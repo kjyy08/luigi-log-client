@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useGetMyProfile, useUpdateMyProfile } from "@/entities/profile/model/profile.queries";
+import { ProfileSkeleton } from "@/entities/profile/ui/profile-skeleton";
 import { useUploadFile } from "@/entities/file/model/file.mutations";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -11,6 +12,8 @@ import { Label } from "@/shared/ui/label";
 import { Avatar, AvatarImage, AvatarFallback } from "@/shared/ui/avatar";
 import { useToast } from "@/shared/hooks/use-toast";
 import { Camera, Loader2, Save } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import { MarkdownView } from "@/shared/ui/markdown-view";
 
 // 프로필 수정 스키마 정의
 const profileSchema = z.object({
@@ -107,7 +110,7 @@ export const SettingsPage = () => {
     };
 
     if (isProfileLoading) {
-        return <div className="flex h-[50vh] items-center justify-center"><Loader2 className="animate-spin h-8 w-8 text-primary" /></div>;
+        return <ProfileSkeleton />;
     }
 
     return (
@@ -154,7 +157,26 @@ export const SettingsPage = () => {
 
                     <div className="space-y-2">
                         <Label htmlFor="bio">자기소개</Label>
-                        <Textarea id="bio" {...form.register("bio")} placeholder="간단한 자기소개를 입력하세요" className="h-24 resize-none" />
+                        <Tabs defaultValue="write" className="w-full">
+                            <TabsList className="grid w-full grid-cols-2 mb-2">
+                                <TabsTrigger value="write">수정 (Write)</TabsTrigger>
+                                <TabsTrigger value="preview">미리보기 (Preview)</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="write">
+                                <Textarea
+                                    id="bio"
+                                    {...form.register("bio")}
+                                    placeholder="자기소개를 입력하세요 (Markdown 지원)"
+                                    className="min-h-[200px] font-mono text-sm leading-relaxed"
+                                />
+                            </TabsContent>
+                            <TabsContent value="preview">
+                                <div className="min-h-[200px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
+                                    <MarkdownView content={form.watch("bio") || "작성된 내용이 없습니다."} />
+                                </div>
+                            </TabsContent>
+                        </Tabs>
+                        <p className="text-xs text-muted-foreground">Markdown 문법을 지원합니다.</p>
                     </div>
 
                     <div className="space-y-2">
@@ -183,7 +205,7 @@ export const SettingsPage = () => {
                     </div>
 
                     <div className="pt-4 flex justify-end">
-                        <Button type="submit" disabled={isUpdating} className="min-w-[120px]">
+                        <Button type="submit" disabled={isUpdating} className="min-w-[120px] bg-luigi-green hover:bg-luigi-green/90 text-white">
                             {isUpdating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                             저장하기
                         </Button>

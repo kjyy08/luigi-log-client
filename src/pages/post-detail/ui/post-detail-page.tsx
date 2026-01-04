@@ -8,6 +8,7 @@ import { useAuthStore } from "@/entities/auth/model/auth.store";
 import { useToast } from "@/shared/hooks/use-toast";
 import { MarkdownView } from "@/shared/ui/markdown-view";
 import { cn } from "@/shared/lib/utils";
+import { PostDetailSkeleton } from "./post-detail-skeleton";
 
 export const PostDetailPage = () => {
     const { username, slug } = useParams<{ username: string; slug: string }>();
@@ -27,28 +28,33 @@ export const PostDetailPage = () => {
         enabled: !!username && !!slug,
     });
 
+
     const handleDelete = async () => {
         if (!post) return;
         if (confirm("정말로 이 글을 삭제하시겠습니까?")) {
             try {
                 await deletePost(post.postId);
                 toast({ title: "삭제 완료", description: "포스트가 삭제되었습니다." });
-                navigate("/posts");
+                navigate(post.type === "PORTFOLIO" ? "/portfolio" : "/blog");
             } catch (error) {
                 toast({ title: "삭제 실패", description: "오류가 발생했습니다.", variant: "destructive" });
             }
         }
     };
 
-    if (isLoading) return <div className="container py-20 text-center text-muted-foreground">Loading post...</div>;
+    if (isLoading) return <PostDetailSkeleton />;
     if (isError || !post) return <div className="container py-20 text-center text-muted-foreground">Post not found.</div>;
 
     return (
         <article className="container max-w-3xl py-12 animate-fade-in space-y-8">
             <div className="flex items-center justify-between gap-4">
-                <Button variant="ghost" onClick={() => navigate("/posts")} className="-ml-4 text-muted-foreground hover:text-foreground">
+                <Button
+                    variant="ghost"
+                    onClick={() => navigate(post.type === "PORTFOLIO" ? "/portfolio" : "/blog")}
+                    className="-ml-4 text-muted-foreground hover:text-foreground"
+                >
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    목록으로
+                    뒤로가기
                 </Button>
 
                 {isAuthenticated && (

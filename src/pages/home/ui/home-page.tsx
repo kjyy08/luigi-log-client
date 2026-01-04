@@ -25,13 +25,13 @@ export const HomePage = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 mt-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                <Button asChild size="lg" className="h-14 bg-luigi-green hover:bg-luigi-green/90 text-white font-bold rounded-2xl px-10 text-lg shadow-xl shadow-luigi-green/30 transition-all hover:scale-105 active:scale-95">
-                    <Link to="/posts">
+            <div className="flex flex-col sm:flex-row gap-6 mt-4 animate-fade-in-up">
+                <Button asChild size="lg" className="h-14 bg-luigi-green hover:bg-luigi-green/90 text-white font-bold rounded-2xl px-10 text-lg shadow-xl shadow-luigi-green/30 transition-all duration-300 transform-gpu hover:scale-105 active:scale-95" style={{ backfaceVisibility: 'hidden' }}>
+                    <Link to="/blog">
                         Browse All Posts <ArrowRight className="ml-2 h-6 w-6" />
                     </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="h-14 rounded-2xl px-10 text-lg border-2 hover:bg-accent/50 transition-all hover:scale-105 active:scale-95">
+                <Button asChild variant="outline" size="lg" className="h-14 rounded-2xl px-10 text-lg border-2 hover:bg-accent/50 transition-all duration-300 transform-gpu hover:scale-105 active:scale-95" style={{ backfaceVisibility: 'hidden' }}>
                     <Link to="/about">
                         About Me
                     </Link>

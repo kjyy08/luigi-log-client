@@ -1,8 +1,10 @@
 import { Button } from "@/shared/ui/button";
 import { Link } from "react-router-dom";
-import { Github, Mail, Globe, Code, Loader2 } from "lucide-react";
+import { Github, Mail, Globe, Code, Loader2, User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getMyProfile } from "@/entities/profile/api/profile.api";
+import { MarkdownView } from "@/shared/ui/markdown-view";
+import { AboutPageSkeleton } from "./about-page-skeleton";
 
 export const AboutPage = () => {
     const { data: profile, isLoading, isError } = useQuery({
@@ -11,11 +13,7 @@ export const AboutPage = () => {
     });
 
     if (isLoading) {
-        return (
-            <div className="flex h-[50vh] items-center justify-center">
-                <Loader2 className="w-10 h-10 animate-spin text-luigi-green" />
-            </div>
-        );
+        return <AboutPageSkeleton />;
     }
 
     if (isError || !profile) {
@@ -49,8 +47,7 @@ export const AboutPage = () => {
                         Hi, I'm <span className="text-luigi-green">{profile.nickname}</span>! 🍄
                     </h1>
                     <p className="text-xl text-muted-foreground leading-relaxed">
-                        {profile.jobTitle || "모험을 즐기는 개발자"} <br />
-                        {profile.bio || "기술적인 복잡함을 즐거움으로 바꾸는 마법을 부리고 싶습니다."}
+                        {profile.jobTitle || "모험을 즐기는 개발자"}
                     </p>
                     <div className="flex justify-center md:justify-start gap-4">
                         {profile.githubUrl && (
@@ -88,6 +85,17 @@ export const AboutPage = () => {
                     </div>
                 </section>
             )}
+
+            {/* About Me Section (Markdown) */}
+            <section className="space-y-6">
+                <h2 className="text-2xl font-bold flex items-center gap-2">
+                    <User className="w-6 h-6 text-luigi-green" />
+                    About Me
+                </h2>
+                <div className="bg-card rounded-xl p-6 border shadow-sm">
+                    <MarkdownView content={profile.bio || "아직 자기소개가 없습니다."} />
+                </div>
+            </section>
         </div>
     );
 };

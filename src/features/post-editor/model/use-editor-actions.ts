@@ -3,7 +3,11 @@ import { useToast } from "@/shared/hooks/use-toast";
 import { useEditorStore } from "./editor.store";
 import { useCreatePost, useUpdatePost, useDeletePost } from "@/entities/post/model/post.mutations";
 import { generateSlug } from "@/shared/lib/utils";
-import type { CreatePostRequest, UpdatePostRequest } from "@/entities/post/model/post.dto";
+import type { CreatePostRequest, UpdatePostRequest, PostType } from "@/entities/post/model/post.dto";
+
+const getRedirectPath = (type: PostType) => {
+    return type === 'PORTFOLIO' ? '/portfolio' : '/blog';
+};
 
 export const useEditorActions = () => {
     const navigate = useNavigate();
@@ -69,9 +73,7 @@ export const useEditorActions = () => {
             }
 
             reset();
-            // Navigate based on post type
-            const targetPath = type === "BLOG" ? "/blog" : "/portfolio";
-            navigate(targetPath);
+            navigate(getRedirectPath(type));
             return true;
         } catch (error) {
             console.error("Publish failed", error);
@@ -85,7 +87,7 @@ export const useEditorActions = () => {
     };
 
     const deleteCurrentPost = async () => {
-        const { postId, type, reset } = useEditorStore.getState();
+        const { postId, reset, type } = useEditorStore.getState();
 
         if (!postId) return;
 
@@ -97,9 +99,7 @@ export const useEditorActions = () => {
                     description: "포스트가 삭제되었습니다.",
                 });
                 reset();
-                // Navigate based on post type
-                const targetPath = type === "BLOG" ? "/blog" : "/portfolio";
-                navigate(targetPath);
+                navigate(getRedirectPath(type));
             } catch (error) {
                 console.error("Delete failed", error);
                 toast({
@@ -122,17 +122,15 @@ export const useEditorActions = () => {
     };
 
     const goBack = () => {
-        const { title, body, type, reset } = useEditorStore.getState();
-        const targetPath = type === "BLOG" ? "/blog" : "/portfolio";
-
+        const { title, body, reset, type } = useEditorStore.getState();
         if (title || body) {
             if (confirm("작성 중인 내용이 있습니다. 정말 나가시겠습니까?")) {
                 reset();
-                navigate(targetPath);
+                navigate(getRedirectPath(type));
             }
         } else {
             reset();
-            navigate(targetPath);
+            navigate(getRedirectPath(type));
         }
     }
 

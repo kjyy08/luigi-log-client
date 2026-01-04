@@ -4,6 +4,8 @@ import { PageHeader } from "@/shared/ui/page-header";
 import { PostList } from "@/features/post-list";
 import { useAuthStore } from "@/entities/auth/model/auth.store";
 import { Pencil } from "lucide-react";
+import React from "react";
+import { PostListSkeleton } from "@/features/post-list/ui/post-list-skeleton";
 
 export const PortfolioListPage = () => {
     const { isAuthenticated } = useAuthStore();
@@ -24,7 +26,9 @@ export const PortfolioListPage = () => {
                 )}
             </PageHeader>
 
-            <PostList fixedType="PORTFOLIO" showTabs={false} />
+            <React.Suspense fallback={<PostListSkeleton />}>
+                <PostList fixedType="PORTFOLIO" showTabs={false} />
+            </React.Suspense>
         </div>
     );
 };
