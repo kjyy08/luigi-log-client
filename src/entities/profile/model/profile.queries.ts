@@ -7,10 +7,11 @@ export const profileKeys = {
     myProfile: () => [...profileKeys.all, 'my'] as const,
 };
 
-export const useGetMyProfile = () => {
+export const useGetMyProfile = (options?: { enabled?: boolean }) => {
     return useQuery({
         queryKey: profileKeys.myProfile(),
         queryFn: getMyProfile,
+        ...options,
     });
 };
 

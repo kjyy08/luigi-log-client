@@ -12,10 +12,14 @@ import {
 import { LogOut, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuthActions } from "../model/use-auth-actions";
+import { useGetMyProfile } from "@/entities/profile/model/profile.queries";
 
 export const LoginButton = () => {
-    const { isAuthenticated, member, profile } = useAuthStore();
+    const { isAuthenticated, member, profile: storeProfile } = useAuthStore();
     const { handleLogin, handleLogout } = useAuthActions();
+
+    const { data: profileQueryData } = useGetMyProfile({ enabled: isAuthenticated });
+    const profile = profileQueryData || storeProfile;
 
     if (isAuthenticated) {
         return (
