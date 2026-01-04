@@ -5,7 +5,7 @@ export const publicApi = axios.create({
     baseURL: API_BASE_URL,
     timeout: 10000,
     headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json', // Let axios set this automatically, especially for FormData
     },
     withCredentials: true, // For cookie-based auth (Refresh Token)
 });
