@@ -14,7 +14,7 @@ interface PostCardProps {
 export const PostCard = ({ post, isAuthenticated, onDelete, className }: PostCardProps) => {
     return (
         <Link
-            to={`/posts/${post.slug}`}
+            to={`/posts/${post.author.username}/${post.slug}`}
             className={cn(
                 "group flex flex-col gap-4 rounded-2xl border p-5 transition-all hover:bg-muted/50 hover:shadow-lg hover:-translate-y-1",
                 className

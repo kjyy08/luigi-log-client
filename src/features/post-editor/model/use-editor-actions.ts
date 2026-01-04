@@ -69,7 +69,9 @@ export const useEditorActions = () => {
             }
 
             reset();
-            navigate("/posts");
+            // Navigate based on post type
+            const targetPath = type === "BLOG" ? "/blog" : "/portfolio";
+            navigate(targetPath);
             return true;
         } catch (error) {
             console.error("Publish failed", error);
@@ -83,7 +85,7 @@ export const useEditorActions = () => {
     };
 
     const deleteCurrentPost = async () => {
-        const { postId, reset } = useEditorStore.getState();
+        const { postId, type, reset } = useEditorStore.getState();
 
         if (!postId) return;
 
@@ -95,7 +97,9 @@ export const useEditorActions = () => {
                     description: "포스트가 삭제되었습니다.",
                 });
                 reset();
-                navigate("/posts");
+                // Navigate based on post type
+                const targetPath = type === "BLOG" ? "/blog" : "/portfolio";
+                navigate(targetPath);
             } catch (error) {
                 console.error("Delete failed", error);
                 toast({
@@ -118,15 +122,17 @@ export const useEditorActions = () => {
     };
 
     const goBack = () => {
-        const { title, body, reset } = useEditorStore.getState();
+        const { title, body, type, reset } = useEditorStore.getState();
+        const targetPath = type === "BLOG" ? "/blog" : "/portfolio";
+
         if (title || body) {
             if (confirm("작성 중인 내용이 있습니다. 정말 나가시겠습니까?")) {
                 reset();
-                navigate("/posts");
+                navigate(targetPath);
             }
         } else {
             reset();
-            navigate("/posts");
+            navigate(targetPath);
         }
     }
 

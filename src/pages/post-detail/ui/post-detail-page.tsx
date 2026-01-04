@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getPostList, getPostDetail } from "@/entities/post/api/post.api";
+import { getPostBySlug } from "@/entities/post/api/post.api";
 import { useDeletePost } from "@/entities/post/model/post.mutations";
 import { Button } from "@/shared/ui/button";
 import { ArrowLeft, Calendar, Pencil, Trash2 } from "lucide-react";
@@ -10,32 +10,21 @@ import { MarkdownView } from "@/shared/ui/markdown-view";
 import { cn } from "@/shared/lib/utils";
 
 export const PostDetailPage = () => {
-    const { slug } = useParams<{ slug: string }>();
+    const { username, slug } = useParams<{ username: string; slug: string }>();
     const navigate = useNavigate();
     const { toast } = useToast();
     const { isAuthenticated } = useAuthStore();
     const { mutateAsync: deletePost } = useDeletePost();
 
     const { data: post, isLoading, isError } = useQuery({
-        queryKey: ["post", "detail", slug],
+        queryKey: ["post", "bySlug", username, slug],
         queryFn: async () => {
-            try {
-                const detail = await getPostDetail(slug!);
-                if (detail) return detail;
-            } catch (e) {
-                // Ignore and try searching in list
+            if (!username || !slug) {
+                throw new Error("Username or slug is missing");
             }
-
-            const result = await getPostList({ status: "PUBLISHED" });
-            const found = result.posts.find(p => p.slug === slug);
-
-            if (found) {
-                return await getPostDetail(found.postId);
-            }
-
-            throw new Error("Post not found");
+            return await getPostBySlug(username, slug);
         },
-        enabled: !!slug,
+        enabled: !!username && !!slug,
     });
 
     const handleDelete = async () => {

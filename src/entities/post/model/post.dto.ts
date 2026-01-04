@@ -3,6 +3,7 @@ export type PostStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 
 export interface PostAuthor {
     memberId: string;
+    username: string;
     nickname: string;
     profileImageUrl: string;
 }
