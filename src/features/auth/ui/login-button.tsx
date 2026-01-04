@@ -72,7 +72,7 @@ export const LoginButton = () => {
             variant="default"
             className="bg-luigi-green hover:bg-luigi-green/90 text-white font-bold"
         >
-            Login
+            로그인
         </Button>
     );
 };
