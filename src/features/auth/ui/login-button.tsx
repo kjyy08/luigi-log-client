@@ -55,7 +55,7 @@ export const LoginButton = () => {
                         className="cursor-pointer text-destructive focus:text-destructive"
                     >
                         <UserX className="mr-2 h-4 w-4" />
-                        <span>Sign out</span>
+                        <span>Delete account</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
