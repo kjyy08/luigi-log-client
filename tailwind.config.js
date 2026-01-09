@@ -81,8 +81,8 @@ export default {
                 },
                 // Luigi Theme extension
                 luigi: {
-                    green: "#22c55e",
-                    blue: "#004080",
+                    green: "#2da44e", // GitHub Success Green
+                    blue: "#0969da", // GitHub Link Blue
                     gold: "#FBD000"
                 }
             },
