@@ -1,98 +1,52 @@
-import { Button } from "@/shared/ui/button";
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { motion, Variants } from "framer-motion";
-import { Luigi3DBackground, LuigiHeroLogo } from "@/features/hero-3d";
+import { ProfileCard } from "@/entities/profile/ui/profile-card";
+import { RecentPostList } from "./components/recent-post-list";
+import { PostContributionGraph } from "./components/post-contribution-graph";
+import { Suspense } from "react";
+import { HomeSkeleton } from "./home-skeleton";
+import { useGetProfile } from "@/entities/profile/model/profile.queries";
+import { ProfileReadme } from "./components/profile-readme";
+import { RecentGuestbook } from "./components/recent-guestbook";
+import { BLOG_OWNER_USERNAME } from "@/shared/config";
+import { useAuthStore } from "@/entities/auth/model/auth.store";
 
 export const HomePage = () => {
-    const containerVariants: Variants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2,
-            },
-        },
-    };
+    const { data: profile } = useGetProfile(BLOG_OWNER_USERNAME);
+    const { member } = useAuthStore();
+    const isOwner = member?.username === BLOG_OWNER_USERNAME;
 
-    const itemVariants: Variants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-            },
-        },
-    };
+    if (!profile) return <HomeSkeleton />;
 
     return (
-        <div className="relative z-0 flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] overflow-hidden">
-            <Luigi3DBackground />
+        <Suspense fallback={<HomeSkeleton />}>
+            <div className="container mx-auto py-8 px-4 md:px-6 max-w-7xl">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+                    {/* Left Sidebar (Profile) - 30%ish */}
+                    <div className="md:col-span-4 lg:col-span-3">
+                        <ProfileCard
+                            profile={profile}
+                            isOwner={isOwner}
+                        />
+                    </div>
 
-            <div className="container relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-20 px-6">
-                <motion.div
-                    className="flex items-center justify-center h-[400px] lg:h-[600px] w-full"
-                    variants={itemVariants}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    <LuigiHeroLogo />
-                </motion.div>
+                    {/* Right Content - 70%ish */}
+                    <div className="md:col-span-8 lg:col-span-9 space-y-8">
+                        {/* Readme Section (Overview) */}
+                        <ProfileReadme
+                            username={profile.nickname}
+                            content={profile.readme}
+                            isOwner={isOwner}
+                            profile={profile}
+                        />
 
-                <motion.div
-                    className="space-y-8 text-center lg:text-left flex flex-col items-center lg:items-start"
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    <motion.div variants={itemVariants}>
-                        <div className="inline-block px-4 py-1.5 mb-2 text-sm font-bold rounded-full bg-luigi-green/20 text-luigi-green border border-luigi-green/30 backdrop-blur-md shadow-lg shadow-luigi-green/10">
-                            Welcome to my creative space
+                        <RecentPostList />
+
+                        <div className="space-y-8">
+                            <PostContributionGraph />
+                            <RecentGuestbook />
                         </div>
-                    </motion.div>
-
-                    <motion.h1
-                        variants={itemVariants}
-                        className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter bg-gradient-to-br from-luigi-green via-luigi-green to-luigi-blue bg-clip-text text-transparent pb-4 drop-shadow-2xl"
-                        style={{ lineHeight: 1.1 }}
-                    >
-                        Fun,<br />Professional,<br />Unique.
-                    </motion.h1>
-
-                    <motion.p
-                        variants={itemVariants}
-                        className="text-xl text-foreground md:text-2xl font-medium leading-tight max-w-2xl drop-shadow-sm"
-                    >
-                        개발자 <span className="font-extrabold text-luigi-green underline underline-offset-8 decoration-luigi-green/50">Luigi</span>의 기술 블로그에 오신 것을 환영합니다.
-                    </motion.p>
-
-                    <motion.div
-                        variants={itemVariants}
-                        className="space-y-4 text-base md:text-lg text-foreground/90 max-w-2xl font-semibold leading-relaxed"
-                    >
-                        <p className="drop-shadow-sm">여기는 기술적인 고민과 성장을 기록하는 공간입니다.</p>
-                        <p className="hidden md:block drop-shadow-sm">딱딱한 기술 생태계에 약간의 유머와 활기를 더하고 싶습니다.</p>
-                    </motion.div>
-
-                    <motion.div
-                        variants={itemVariants}
-                        className="flex flex-col sm:flex-row gap-6 mt-6 w-full justify-center lg:justify-start"
-                    >
-                        <Button asChild size="lg" className="h-16 bg-luigi-green hover:bg-luigi-green/90 text-white font-black rounded-2xl px-12 text-xl shadow-2xl shadow-luigi-green/40 transition-all duration-300 transform-gpu hover:scale-105 active:scale-95 border-b-4 border-luigi-blue/20" style={{ backfaceVisibility: 'hidden' }}>
-                            <Link to="/blog">
-                                Browse Posts <ArrowRight className="ml-2 h-7 w-7" />
-                            </Link>
-                        </Button>
-                        <Button asChild variant="outline" size="lg" className="h-16 rounded-2xl px-12 text-xl border-4 border-luigi-blue/30 text-foreground font-bold hover:bg-luigi-blue/10 backdrop-blur-md transition-all duration-300 transform-gpu hover:scale-105 active:scale-95 shadow-xl" style={{ backfaceVisibility: 'hidden' }}>
-                            <Link to="/about">
-                                About Me
-                            </Link>
-                        </Button>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </Suspense>
     );
 };

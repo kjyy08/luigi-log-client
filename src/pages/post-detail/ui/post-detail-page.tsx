@@ -1,30 +1,26 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getPostBySlug } from "@/entities/post/api/post.api";
+import { postQueries } from "@/entities/post/model/post.queries";
 import { useDeletePost } from "@/entities/post/model/post.mutations";
 import { Button } from "@/shared/ui/button";
-import { ArrowLeft, Calendar, Pencil, Trash2 } from "lucide-react";
-import { useAuthStore } from "@/entities/auth/model/auth.store";
+
+import { useIsOwner } from "@/shared/hooks/use-is-owner";
 import { useToast } from "@/shared/hooks/use-toast";
-import { MarkdownView } from "@/shared/ui/markdown-view";
-import { cn } from "@/shared/lib/utils";
+import { IssueHeader } from "./issue-header";
+import { CommentBox } from "./comment-box";
+import { PostDetailSidebar } from "./post-detail-sidebar";
 import { PostDetailSkeleton } from "./post-detail-skeleton";
 
 export const PostDetailPage = () => {
     const { username, slug } = useParams<{ username: string; slug: string }>();
     const navigate = useNavigate();
     const { toast } = useToast();
-    const { isAuthenticated } = useAuthStore();
+    const isOwner = useIsOwner();
+
     const { mutateAsync: deletePost } = useDeletePost();
 
     const { data: post, isLoading, isError } = useQuery({
-        queryKey: ["post", "bySlug", username, slug],
-        queryFn: async () => {
-            if (!username || !slug) {
-                throw new Error("Username or slug is missing");
-            }
-            return await getPostBySlug(username, slug);
-        },
+        ...postQueries.detailBySlug(username!, slug!),
         enabled: !!username && !!slug,
     });
 
@@ -45,85 +41,71 @@ export const PostDetailPage = () => {
     if (isLoading) return <PostDetailSkeleton />;
     if (isError || !post) return <div className="container py-20 text-center text-muted-foreground">Post not found.</div>;
 
-    return (
-        <article className="container max-w-3xl py-12 animate-fade-in space-y-8">
-            <div className="flex items-center justify-between gap-4">
-                <Button
-                    variant="ghost"
-                    onClick={() => navigate(post.type === "PORTFOLIO" ? "/portfolio" : "/blog")}
-                    className="-ml-4 text-muted-foreground hover:text-foreground"
-                >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    뒤로가기
-                </Button>
+    // Moved to top
+    // const isOwner = useIsOwner();
 
-                {isAuthenticated && (
-                    <div className="flex gap-2">
-                        <Button variant="secondary" size="icon" asChild title="수정">
+    return (
+        <article className="container max-w-7xl py-8 animate-fade-in">
+            <IssueHeader
+                title={post.title}
+                postId={post.postId}
+                createdAt={post.createdAt}
+                authorName={post.author?.nickname || "Anonymous"}
+                status={post.status || "PUBLISHED"} // Add status field if API supports it
+                type={post.type}
+            >
+                {isOwner && (
+                    <>
+                        <Button variant="secondary" size="sm" asChild>
                             <Link to={`/posts/${post.postId}/edit`}>
-                                <Pencil className="h-4 w-4" />
+                                Edit
                             </Link>
                         </Button>
-                        <Button variant="destructive" size="icon" onClick={handleDelete} title="삭제">
-                            <Trash2 className="h-4 w-4" />
+                        <Button variant="destructive" size="sm" onClick={handleDelete}>
+                            Delete
                         </Button>
-                    </div>
+                    </>
                 )}
+            </IssueHeader>
+
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
+                <div className="space-y-8 min-w-0">
+                    <CommentBox
+                        author={{
+                            name: post.author?.nickname || "Anonymous",
+                            avatarUrl: post.author?.profileImageUrl
+                        }}
+                        date={post.createdAt}
+                        content={post.body}
+                        type="ISSUE"
+                    />
+
+                    <div className="relative py-8">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t-2 border-dashed border-gray-200 dark:border-gray-800" />
+                        </div>
+                        <div className="relative flex justify-center">
+                            <span className="bg-background px-4 text-xs uppercase text-muted-foreground font-medium">
+                                Timeline
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Placeholder for comments */}
+                    <div className="text-center text-muted-foreground py-8 border rounded-lg border-dashed bg-muted/20">
+                        No comments yet
+                    </div>
+                </div>
+
+                <PostDetailSidebar
+                    author={{
+                        nickname: post.author?.nickname || "Anonymous",
+                        profileImageUrl: post.author?.profileImageUrl
+                    }}
+                    tags={post.tags}
+                    type={post.type}
+                />
             </div>
-
-            <header className="space-y-6">
-                <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider">
-                    <span className={cn(
-                        post.type === "PORTFOLIO" ? "text-luigi-blue" : "text-luigi-green"
-                    )}>
-                        {post.type}
-                    </span>
-                    <span className="opacity-30">|</span>
-                    <div className="flex items-center text-muted-foreground font-normal">
-                        <Calendar className="mr-1 h-3.5 w-3.5" />
-                        {new Date(post.createdAt).toLocaleDateString()}
-                    </div>
-                </div>
-
-                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
-                    {post.title}
-                </h1>
-
-                <div className="flex items-center gap-4 py-2 border-y">
-                    <div className="w-10 h-10 rounded-full border p-0.5 overflow-hidden">
-                        {post.author?.profileImageUrl ? (
-                            <img src={post.author.profileImageUrl} alt={post.author.nickname} className="w-full h-full rounded-full object-cover" />
-                        ) : (
-                            <div className="w-full h-full bg-muted rounded-full flex items-center justify-center text-[10px] text-muted-foreground">
-                                NM
-                            </div>
-                        )}
-                    </div>
-                    <div>
-                        <p className="font-bold text-sm text-foreground">{post.author?.nickname || "Anonymous"}</p>
-                        <p className="text-xs text-muted-foreground">Author</p>
-                    </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                    {post.tags.map(tag => (
-                        <span key={tag} className="px-3 py-1 rounded-full bg-secondary text-xs font-medium">
-                            #{tag}
-                        </span>
-                    ))}
-                </div>
-
-                {post.thumbnail && (
-                    <div className="aspect-video w-full overflow-hidden rounded-3xl border shadow-xl">
-                        <img src={post.thumbnail} alt={post.title} className="w-full h-full object-cover" />
-                    </div>
-                )}
-            </header>
-
-            <section>
-                <MarkdownView content={post.body} />
-            </section>
-
         </article>
     );
 };

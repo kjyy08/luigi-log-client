@@ -1,16 +1,11 @@
 import { Button } from "@/shared/ui/button";
 import { Link } from "react-router-dom";
 import { Github, Mail, Globe, Code, Loader2, User } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { getMyProfile } from "@/entities/profile/api/profile.api";
-import { MarkdownView } from "@/shared/ui/markdown-view";
-import { AboutPageSkeleton } from "./about-page-skeleton";
+import { useGetProfile } from "@/entities/profile/model/profile.queries";
+import { BLOG_OWNER_USERNAME } from "@/shared/config";
 
 export const AboutPage = () => {
-    const { data: profile, isLoading, isError } = useQuery({
-        queryKey: ["profile", "me"],
-        queryFn: getMyProfile,
-    });
+    const { data: profile, isLoading, isError } = useGetProfile(BLOG_OWNER_USERNAME);
 
     if (isLoading) {
         return <AboutPageSkeleton />;

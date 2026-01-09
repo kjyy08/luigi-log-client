@@ -28,8 +28,13 @@ const profileSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
+import { useAuthStore } from "@/entities/auth/model/auth.store";
+
 export const SettingsPage = () => {
-    const { data: profile, isLoading: isProfileLoading } = useGetMyProfile();
+    const { member } = useAuthStore();
+    const { data: profile, isLoading: isProfileLoading } = useGetMyProfile(member?.username, {
+        enabled: !!member?.username
+    });
     const { mutateAsync: updateProfile, isPending: isUpdating } = useUpdateMyProfile();
     const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile();
     const { toast } = useToast();
