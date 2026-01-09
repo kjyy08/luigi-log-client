@@ -21,7 +21,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
                             setMember(member);
 
                             try {
-                                const profile = await getMyProfile();
+                                const profile = await getMyProfile(member.username);
                                 if (profile) {
                                     setProfile(profile);
                                 }

@@ -1,6 +1,7 @@
 import { AnimatedOutlet } from "@/shared/ui/animated-outlet";
 import { Header } from "@/features/navigation/ui/header";
 import { LoginButton } from "@/features/auth/ui/login-button";
+import { GlobalFooter } from "@/features/navigation/ui/global-footer";
 
 export const BaseLayout = () => {
     return (
@@ -9,13 +10,7 @@ export const BaseLayout = () => {
             <main className="flex-1 container py-6">
                 <AnimatedOutlet />
             </main>
-            <footer className="border-t py-6 md:py-0">
-                <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-                    <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                        © 2026 Luigi Log. All rights reserved.
-                    </p>
-                </div>
-            </footer>
+            <GlobalFooter />
         </div>
     );
 };
