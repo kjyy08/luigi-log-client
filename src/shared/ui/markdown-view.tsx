@@ -10,7 +10,7 @@ import { cn } from "@/shared/lib/utils";
 
 const CodeBlock = ({ language, value }: { language?: string; value: string }) => {
     const [copied, setCopied] = useState(false);
-    const { theme } = useTheme();
+    const { resolvedTheme } = useTheme();
 
     const handleCopy = async () => {
         await navigator.clipboard.writeText(value);
@@ -28,13 +28,13 @@ const CodeBlock = ({ language, value }: { language?: string; value: string }) =>
                 {copied ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
             </button>
             <SyntaxHighlighter
-                style={theme === "dark" ? oneDark : oneLight}
+                style={resolvedTheme === "dark" ? oneDark : oneLight}
                 language={language || "text"}
                 PreTag="div"
                 customStyle={{
                     margin: 0,
                     padding: "1.25rem",
-                    background: theme === "dark" ? undefined : "#f1f5f9", // slate-100
+                    background: resolvedTheme === "dark" ? undefined : "#f1f5f9", // slate-100
                     fontSize: "0.95rem",
                 }}
             >
@@ -51,7 +51,7 @@ interface MarkdownViewProps {
 
 export const MarkdownView = ({ content, className }: MarkdownViewProps) => {
     return (
-        <div className={cn("prose prose-lg dark:prose-invert max-w-none prose-pre:bg-transparent prose-pre:p-0 break-words", className)}>
+        <div className={cn("prose dark:prose-invert max-w-none prose-pre:bg-transparent prose-pre:p-0 break-words", className)}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{

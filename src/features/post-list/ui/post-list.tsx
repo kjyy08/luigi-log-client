@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { postQueries, type PostType, PostCard, useDeletePost } from "@/entities/post";
+import { postQueries, type PostType, PostCard, useDeletePost, PostListItem } from "@/entities/post";
 import { useAuthStore } from "@/entities/auth/model/auth.store";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/utils";
@@ -8,6 +8,7 @@ import { cn } from "@/shared/lib/utils";
 interface PostListProps {
     fixedType?: PostType;
     showTabs?: boolean;
+    viewMode?: "grid" | "list";
 }
 
 const TABS = [
@@ -16,7 +17,7 @@ const TABS = [
     { label: "Portfolio", value: "PORTFOLIO" },
 ] as const;
 
-export const PostList = ({ fixedType, showTabs = true }: PostListProps) => {
+export const PostList = ({ fixedType, showTabs = true, viewMode = "grid" }: PostListProps) => {
     const [activeTab, setActiveTab] = useState<string>(fixedType ?? "all");
 
     // If fixedType is provided, it takes precedence. Otherwise use activeTab.
@@ -68,19 +69,29 @@ export const PostList = ({ fixedType, showTabs = true }: PostListProps) => {
                 </div>
             )}
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className={cn(
+                "grid gap-8",
+                viewMode === "grid" ? "md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 gap-0"
+            )}>
                 {posts.length === 0 ? (
                     <div className="col-span-full text-center py-20 text-muted-foreground">
                         작성된 글이 없습니다.
                     </div>
                 ) : (
                     posts.map((post) => (
-                        <PostCard
-                            key={post.postId}
-                            post={post}
-                            isAuthenticated={isAuthenticated}
-                            onDelete={handleDelete}
-                        />
+                        viewMode === "list" ? (
+                            <PostListItem
+                                key={post.postId}
+                                post={post}
+                            />
+                        ) : (
+                            <PostCard
+                                key={post.postId}
+                                post={post}
+                                isAuthenticated={isAuthenticated}
+                                onDelete={handleDelete}
+                            />
+                        )
                     ))
                 )}
             </div>
