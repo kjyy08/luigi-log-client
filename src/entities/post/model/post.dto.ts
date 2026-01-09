@@ -24,6 +24,8 @@ export interface PostResponse {
     type: PostType;
     status: PostStatus;
     tags: string[];
+    viewCount?: number;
+    commentCount?: number;
     createdAt: string;
     updatedAt: string;
     thumbnail?: string;

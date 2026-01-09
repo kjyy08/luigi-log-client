@@ -15,7 +15,17 @@ export const getPostList = async (params?: PostListRequest) => {
         postApiEndPoint.list(),
         { params }
     );
-    return response.data.data;
+    // TODO: Remove mocks when backend is ready
+    return {
+        ...response.data.data,
+        posts: response.data.data.posts.map(post => ({
+            ...post,
+            body: post.body ?? "No content available for this post.",
+            updatedAt: post.updatedAt ?? new Date().toISOString(),
+            viewCount: post.viewCount ?? Math.floor(Math.random() * 1000),
+            commentCount: post.commentCount ?? Math.floor(Math.random() * 50)
+        }))
+    };
 };
 
 export const getPostDetail = async (id: string) => {
