@@ -20,3 +20,8 @@ export const getMyCredentials = async () => {
     return response.data;
 };
 
+export const deleteMember = async () => {
+    return publicApi.delete(authApiEndPoint.deleteMember());
+};
+
+

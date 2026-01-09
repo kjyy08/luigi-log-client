@@ -9,3 +9,10 @@ export interface MemberResponse {
     email: string;
     username: string;
 }
+
+export interface MemberProfile {
+    memberId: string;
+    nickname: string;
+    profileImageUrl: string | null;
+    username: string;
+}

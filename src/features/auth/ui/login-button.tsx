@@ -9,16 +9,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { LogOut, UserX } from "lucide-react";
 import { useAuthActions } from "../model/use-auth-actions";
 import { useGetMyProfile } from "@/entities/profile/model/profile.queries";
 
 export const LoginButton = () => {
     const { isAuthenticated, member, profile: storeProfile } = useAuthStore();
-    const { handleLogin, handleLogout } = useAuthActions();
+    const { handleLogin, handleLogout, handleDeleteAccount } = useAuthActions();
 
-    const { data: profileQueryData } = useGetMyProfile({ enabled: isAuthenticated });
+    const { data: profileQueryData } = useGetMyProfile(member?.username, { enabled: isAuthenticated && !!member?.username });
     const profile = profileQueryData || storeProfile;
 
     if (isAuthenticated) {
@@ -51,11 +50,12 @@ export const LoginButton = () => {
                         </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                        <Link to="/settings" className="cursor-pointer">
-                            <User className="mr-2 h-4 w-4" />
-                            <span>My Page</span>
-                        </Link>
+                    <DropdownMenuItem
+                        onClick={handleDeleteAccount}
+                        className="cursor-pointer text-destructive focus:text-destructive"
+                    >
+                        <UserX className="mr-2 h-4 w-4" />
+                        <span>Sign out</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
