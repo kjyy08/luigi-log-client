@@ -14,15 +14,15 @@ export const BlogListPage = () => {
         <div className="container mx-auto py-8 px-4 md:px-6 max-w-7xl animate-fade-in">
             <div className="flex flex-col md:flex-row items-center justify-between mb-6">
                 <PageHeader
-                    title="게시글"
-                    description="블로그 포스팅 관련 게시글입니다."
+                    title="Posts"
+                    description="Recent articles and updates."
                     className="mb-0 border-none pb-0"
                 />
                 {isOwner && (
                     <Button asChild className="bg-luigi-green hover:bg-luigi-green/90 text-white rounded-md px-4 font-bold shadow-sm h-9">
                         <Link to="/write">
                             <Pencil className="mr-2 h-4 w-4" />
-                            글쓰기
+                            New post
                         </Link>
                     </Button>
                 )}

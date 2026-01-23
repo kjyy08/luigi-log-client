@@ -43,14 +43,14 @@ export const PortfolioListPage = () => {
     return (
         <div className="container max-w-5xl mx-auto py-10 animate-fade-in">
             <PageHeader
-                title="포트폴리오"
-                description="진행한 프로젝트와 작업물을 모아둔 공간입니다."
+                title="Portfolio"
+                description="A collection of my projects and work."
             >
                 {isOwner && (
                     <Button asChild className="bg-luigi-green hover:bg-luigi-green/90 text-white font-bold h-9">
                         <Link to="/write?type=PORTFOLIO">
                             <Pencil className="mr-2 h-4 w-4" />
-                            프로젝트 추가
+                            New project
                         </Link>
                     </Button>
                 )}

@@ -83,7 +83,7 @@ export const ProfileCard = ({
             });
         } catch (error) {
             console.error("Failed to upload image:", error);
-            alert("이미지 업로드에 실패했습니다.");
+            alert("Failed to upload image.");
         }
     };
 
@@ -257,7 +257,7 @@ export const ProfileCard = ({
                     onClick={() => setIsEditing(true)}
                 >
                     <PenLine className="w-4 h-4 mr-2" />
-                    프로필 수정
+                    Edit profile
                 </Button>
             )}
 

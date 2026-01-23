@@ -4,7 +4,7 @@ import { Skeleton } from "@/shared/ui/skeleton";
 export const RecentPostListSkeleton = () => {
     return (
         <div className="space-y-4">
-            <Skeleton className="h-6 w-32" /> {/* Title: 최근 게시글 */}
+            <Skeleton className="h-6 w-32" /> {/* Title: Recent posts */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {Array.from({ length: 6 }).map((_, i) => (

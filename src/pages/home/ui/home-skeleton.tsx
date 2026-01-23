@@ -55,7 +55,7 @@ export const HomeSkeleton = () => {
 
                     {/* Activity Log Skeleton */}
                     <div className="space-y-4">
-                        <Skeleton className="h-6 w-32" /> {/* Title: 최근 작성된 댓글 */}
+                        <Skeleton className="h-6 w-32" /> {/* Title: Recent comments */}
                         <div className="space-y-4 pl-4 border-l ml-2">
                             {Array.from({ length: 3 }).map((_, i) => (
                                 <div key={i} className="relative pl-6">
