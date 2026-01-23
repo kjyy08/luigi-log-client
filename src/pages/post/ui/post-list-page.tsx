@@ -12,13 +12,13 @@ export const PostListPage = () => {
         <div className="py-10 animate-fade-in">
             <PageHeader
                 title="Posts"
-                description="다양한 주제의 포스트를 모아둔 공간입니다."
+                description="A collection of posts on various topics."
             >
                 {isAuthenticated && (
                     <Button asChild className="bg-luigi-green hover:bg-luigi-green/90 text-white rounded-full px-6 font-bold shadow-md shadow-luigi-green/20">
                         <Link to="/write">
                             <Pencil className="mr-2 h-4 w-4" />
-                            글쓰기
+                            New post
                         </Link>
                     </Button>
                 )}
