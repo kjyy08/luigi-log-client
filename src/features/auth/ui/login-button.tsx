@@ -12,13 +12,16 @@ import {
 import { LogOut, UserX } from "lucide-react";
 import { useAuthActions } from "../model/use-auth-actions";
 import { useGetMyProfile } from "@/entities/profile/model/profile.queries";
+import { useUIStore } from "@/shared/store/use-ui-store";
 
 export const LoginButton = () => {
     const { isAuthenticated, member, profile: storeProfile } = useAuthStore();
-    const { handleLogin, handleLogout, handleDeleteAccount } = useAuthActions();
+    const { handleLogout, handleDeleteAccount } = useAuthActions();
 
     const { data: profileQueryData } = useGetMyProfile(member?.username, { enabled: isAuthenticated && !!member?.username });
     const profile = profileQueryData || storeProfile;
+
+    const { openLoginModal } = useUIStore();
 
     if (isAuthenticated) {
         return (
@@ -72,11 +75,11 @@ export const LoginButton = () => {
 
     return (
         <Button
-            onClick={handleLogin}
+            onClick={openLoginModal}
             variant="default"
             className="bg-luigi-green hover:bg-luigi-green/90 text-white font-bold"
         >
-            로그인
+            Sign in
         </Button>
     );
 };

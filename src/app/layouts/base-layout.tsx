@@ -1,6 +1,7 @@
 import { AnimatedOutlet } from "@/shared/ui/animated-outlet";
 import { Header } from "@/features/navigation/ui/header";
 import { LoginButton } from "@/features/auth/ui/login-button";
+import { LoginModal } from "@/features/auth/ui/login-modal";
 import { GlobalFooter } from "@/features/navigation/ui/global-footer";
 
 export const BaseLayout = () => {
@@ -11,6 +12,7 @@ export const BaseLayout = () => {
                 <AnimatedOutlet />
             </main>
             <GlobalFooter />
+            <LoginModal />
         </div>
     );
 };
