@@ -6,11 +6,12 @@ import { useGetMyProfile } from "@/entities/profile/model/profile.queries";
 
 import TextareaAutosize from "react-textarea-autosize";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useCreateGuestbook } from "@/entities/guestbook/model/guestbook.queries";
+import { useUIStore } from "@/shared/store/use-ui-store";
 
 export const GuestbookInput = () => {
     const { isAuthenticated, member, profile: storeProfile } = useAuthStore();
+    const { openLoginModal } = useUIStore();
     const { data: profileQueryData } = useGetMyProfile(member?.username, { enabled: isAuthenticated && !!member?.username });
     const profile = profileQueryData || storeProfile;
     const [content, setContent] = useState("");
@@ -46,21 +47,23 @@ export const GuestbookInput = () => {
                         <TextareaAutosize
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
-                            placeholder={isAuthenticated ? "방명록을 남겨주세요." : "방명록을 남기려면 로그인이 필요합니다."}
+                            placeholder="Leave a message."
                             minRows={3}
                             disabled={!isAuthenticated || isPending}
                             className="w-full resize-none border-0 bg-transparent p-4 placeholder:text-muted-foreground/50 focus:ring-0 text-sm leading-relaxed"
                         />
-                        <div className="flex items-center justify-end border-t bg-muted/20 p-2">
-                            <Button
-                                size="sm"
-                                className="bg-luigi-green hover:bg-luigi-green/90 text-white font-semibold h-8"
-                                disabled={!content.trim() || !isAuthenticated || isPending}
-                                onClick={handleSubmit}
-                            >
-                                {isPending ? "작성 중..." : "방명록 남기기"}
-                            </Button>
-                        </div>
+                        {isAuthenticated && (
+                            <div className="flex items-center justify-end border-t bg-muted/20 p-2">
+                                <Button
+                                    size="sm"
+                                    className="bg-luigi-green hover:bg-luigi-green/90 text-white font-semibold h-8"
+                                    disabled={!content.trim() || isPending}
+                                    onClick={handleSubmit}
+                                >
+                                    {isPending ? "Posting..." : "Sign Guestbook"}
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -73,12 +76,13 @@ export const GuestbookInput = () => {
                 {!isAuthenticated && (
                     <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
                         <div className="pointer-events-auto">
-                            <Link
-                                to="/login"
+                            <button
+                                type="button"
+                                onClick={openLoginModal}
                                 className="text-sm font-medium text-white bg-luigi-green hover:bg-luigi-green/90 px-4 py-2 rounded shadow-sm border border-transparent transition-colors"
                             >
-                                로그인하고 방명록 남기기
-                            </Link>
+                                Sign in to Guestbook
+                            </button>
                         </div>
                     </div>
                 )}

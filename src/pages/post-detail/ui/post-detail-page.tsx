@@ -8,6 +8,8 @@ import { useIsOwner } from "@/shared/hooks/use-is-owner";
 import { useToast } from "@/shared/hooks/use-toast";
 import { IssueHeader } from "./issue-header";
 import { CommentBox } from "./comment-box";
+import { CommentList } from "./comment-list";
+import { CommentForm } from "./comment-form";
 import { PostDetailSidebar } from "./post-detail-sidebar";
 import { PostDetailSkeleton } from "./post-detail-skeleton";
 
@@ -27,13 +29,13 @@ export const PostDetailPage = () => {
 
     const handleDelete = async () => {
         if (!post) return;
-        if (confirm("정말로 이 글을 삭제하시겠습니까?")) {
+        if (confirm("Are you sure you want to delete this post?")) {
             try {
                 await deletePost(post.postId);
-                toast({ title: "삭제 완료", description: "포스트가 삭제되었습니다." });
+                toast({ title: "Deleted", description: "Post has been deleted." });
                 navigate(post.type === "PORTFOLIO" ? "/portfolio" : "/blog");
             } catch (error) {
-                toast({ title: "삭제 실패", description: "오류가 발생했습니다.", variant: "destructive" });
+                toast({ title: "Error", description: "Failed to delete post.", variant: "destructive" });
             }
         }
     };
@@ -91,10 +93,15 @@ export const PostDetailPage = () => {
                         </div>
                     </div>
 
-                    {/* Placeholder for comments */}
-                    <div className="text-center text-muted-foreground py-8 border rounded-lg border-dashed bg-muted/20">
-                        No comments yet
+                    {/* Comments Section */}
+                    <div className="space-y-8">
+                        <CommentList
+                            postId={post.postId}
+                            postAuthorUsername={post.author?.username}
+                        />
+                        <CommentForm postId={post.postId} />
                     </div>
+
                 </div>
 
                 <PostDetailSidebar

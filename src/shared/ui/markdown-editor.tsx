@@ -13,6 +13,7 @@ interface MarkdownEditorProps {
     footer?: React.ReactNode;
     className?: string; // Container className
     editorClassName?: string; // Textarea className
+    resizable?: boolean;
 }
 
 export const MarkdownEditor = ({
@@ -23,7 +24,8 @@ export const MarkdownEditor = ({
     disabled = false,
     footer,
     className,
-    editorClassName
+    editorClassName,
+    resizable = false
 }: MarkdownEditorProps) => {
     return (
         <div className={cn("bg-background rounded-lg border shadow-sm overflow-hidden flex flex-col", className)}>
@@ -49,7 +51,8 @@ export const MarkdownEditor = ({
                     <TextareaAutosize
                         placeholder={placeholder}
                         className={cn(
-                            "w-full h-full resize-none text-base leading-relaxed placeholder:text-muted-foreground/50 outline-none bg-transparent min-h-[100px]",
+                            "w-full h-full text-base leading-relaxed placeholder:text-muted-foreground/50 outline-none bg-transparent min-h-[100px]",
+                            !resizable && "resize-none",
                             editorClassName
                         )}
                         value={value}
@@ -57,9 +60,7 @@ export const MarkdownEditor = ({
                         minRows={minRows}
                         disabled={disabled}
                     />
-                    <div className="mt-4 border-t pt-4 text-xs text-muted-foreground flex justify-between items-center">
-                        <span>Markdown Supported</span>
-                    </div>
+
                 </TabsContent>
 
                 <TabsContent value="preview" className={cn(
@@ -72,7 +73,7 @@ export const MarkdownEditor = ({
                         </div>
                     ) : (
                         <div className="flex h-full items-center justify-center text-muted-foreground text-sm py-8">
-                            미리보기 내용이 없습니다.
+                            No content to preview.
                         </div>
                     )}
                 </TabsContent>

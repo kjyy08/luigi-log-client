@@ -8,7 +8,7 @@ export const cn = (...inputs: ClassValue[]) => {
 
 /**
  * Validates and formats a slug according to backend rules:
- * - Allowed: Korean (가-힣), English (a-zA-Z), Numbers (0-9), Brackets ([])
+ * - Allowed: Korean (Hangul), English (a-zA-Z), Numbers (0-9), Brackets ([])
  * - Replaces invalid chars with hyphens
  * - No start/end hyphens, no consecutive hyphens
  * - Max 500 chars

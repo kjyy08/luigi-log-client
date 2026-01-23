@@ -28,7 +28,7 @@ export const ProjectCard = ({ project, className }: ProjectCardProps) => {
             </div>
 
             <p className="text-xs text-muted-foreground line-clamp-2 mb-4 flex-1">
-                {(project.body || "").replace(/[#*`]/g, "") || "설명이 없습니다."}
+                {(project.body || "").replace(/[#*`]/g, "") || "No description available."}
             </p>
 
             <div className="flex items-center gap-4 text-xs text-muted-foreground mt-auto">

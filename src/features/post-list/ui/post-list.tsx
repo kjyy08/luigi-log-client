@@ -35,12 +35,12 @@ export const PostList = ({ fixedType, showTabs = true, viewMode = "grid" }: Post
         e.preventDefault();
         e.stopPropagation();
 
-        if (confirm("정말로 삭제하시겠습니까?")) {
+        if (confirm("Are you sure you want to delete this?")) {
             try {
                 await deletePost(postId);
             } catch (error) {
                 console.error("Delete failed", error);
-                alert("삭제 실패");
+                alert("Failed to delete");
             }
         }
     };
@@ -75,7 +75,7 @@ export const PostList = ({ fixedType, showTabs = true, viewMode = "grid" }: Post
             )}>
                 {posts.length === 0 ? (
                     <div className="col-span-full text-center py-20 text-muted-foreground">
-                        작성된 글이 없습니다.
+                        No posts found.
                     </div>
                 ) : (
                     posts.map((post) => (

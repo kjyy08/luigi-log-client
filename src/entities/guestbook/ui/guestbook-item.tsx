@@ -24,7 +24,7 @@ export const GuestbookItem = ({ entry }: GuestbookItemProps) => {
     const [editContent, setEditContent] = useState(entry.content);
 
     const handleDelete = () => {
-        if (confirm("정말로 삭제하시겠습니까?")) {
+        if (confirm("Are you sure you want to delete this?")) {
             deleteGuestbook(entry.guestbookId);
         }
     };
@@ -117,10 +117,10 @@ export const GuestbookItem = ({ entry }: GuestbookItemProps) => {
                             </div>
                             <div className="flex justify-end gap-2">
                                 <Button variant="outline" size="sm" onClick={handleCancelEdit} disabled={isUpdating}>
-                                    취소
+                                    Cancel
                                 </Button>
                                 <Button variant="default" size="sm" onClick={handleSaveEdit} disabled={isUpdating}>
-                                    {isUpdating ? "저장 중..." : "저장"}
+                                    {isUpdating ? "Saving..." : "Save"}
                                 </Button>
                             </div>
                         </div>

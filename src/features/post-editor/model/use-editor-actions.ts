@@ -25,8 +25,8 @@ export const useEditorActions = () => {
 
         if (!title || !body) {
             toast({
-                title: "입력 부족",
-                description: "제목과 내용을 모두 입력해주세요.",
+                title: "Missing input",
+                description: "Please enter both title and content.",
                 variant: "destructive",
             });
             return false;
@@ -49,8 +49,8 @@ export const useEditorActions = () => {
                 };
                 await updatePost({ id: postId, data: request });
                 toast({
-                    title: "수정 완료",
-                    description: "포스트가 성공적으로 수정되었습니다.",
+                    title: "Post updated",
+                    description: "Post successfully updated.",
                 });
             } else {
                 const request: CreatePostRequest = {
@@ -67,8 +67,8 @@ export const useEditorActions = () => {
                     });
                 }
                 toast({
-                    title: "출간 완료",
-                    description: "포스트가 성공적으로 출간되었습니다.",
+                    title: "Published",
+                    description: "Post successfully published.",
                 });
             }
 
@@ -78,8 +78,8 @@ export const useEditorActions = () => {
         } catch (error) {
             console.error("Publish failed", error);
             toast({
-                title: "작업 실패",
-                description: "포스트 저장 중 오류가 발생했습니다.",
+                title: "Error",
+                description: "Failed to save post.",
                 variant: "destructive",
             });
             return false;
@@ -91,20 +91,20 @@ export const useEditorActions = () => {
 
         if (!postId) return;
 
-        if (confirm("정말로 이 글을 삭제하시겠습니까? 삭제된 글은 복구할 수 없습니다.")) {
+        if (confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
             try {
                 await deletePost(postId);
                 toast({
-                    title: "삭제 완료",
-                    description: "포스트가 삭제되었습니다.",
+                    title: "Deleted",
+                    description: "Post has been deleted.",
                 });
                 reset();
                 navigate(getRedirectPath(type));
             } catch (error) {
                 console.error("Delete failed", error);
                 toast({
-                    title: "삭제 실패",
-                    description: "포스트 삭제 중 오류가 발생했습니다.",
+                    title: "Error",
+                    description: "Failed to delete post.",
                     variant: "destructive",
                 });
             }
@@ -116,15 +116,15 @@ export const useEditorActions = () => {
         // but currently the store doesn't seem to use persist middleware in the code I saw earlier.
         // Assuming the user wants to keep the manual toast for now.
         toast({
-            title: "임시 저장 완료",
-            description: "작성 중인 내용이 브라우저에 저장되었습니다.",
+            title: "Draft Saved",
+            description: "Your content has been saved locally.",
         });
     };
 
     const goBack = () => {
         const { title, body, reset, type } = useEditorStore.getState();
         if (title || body) {
-            if (confirm("작성 중인 내용이 있습니다. 정말 나가시겠습니까?")) {
+            if (confirm("You have unsaved changes. Are you sure you want to leave?")) {
                 reset();
                 navigate(getRedirectPath(type));
             }

@@ -49,7 +49,7 @@ export const OAuthCallbackPage = () => {
                     Luigi Log
                 </h1>
                 <p className="text-sm font-medium text-muted-foreground animate-pulse">
-                    GitHub로 안전하게 로그인하는 중입니다...
+                    Securely logging in with GitHub...
                 </p>
             </div>
 
