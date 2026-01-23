@@ -10,9 +10,10 @@ interface CommentBoxProps extends ComponentProps<"div"> {
     date: string;
     content: string;
     type?: "ISSUE" | "COMMENT";
+    actions?: React.ReactNode;
 }
 
-export const CommentBox = ({ author, date, content, type = "ISSUE", className, ...props }: CommentBoxProps) => {
+export const CommentBox = ({ author, date, content, type = "ISSUE", actions, className, ...props }: CommentBoxProps) => {
     return (
         <div className={cn("flex gap-4", className)} {...props}>
             <div className="hidden md:block flex-none">
@@ -38,10 +39,12 @@ export const CommentBox = ({ author, date, content, type = "ISSUE", className, .
                             commented on {new Date(date).toLocaleDateString()}
                         </span>
                         <div className="ml-auto flex items-center gap-2">
-                            {/* Actions like Edit/Delete could be injected here */}
-                            <span className="px-2 py-0.5 rounded-full border text-xs text-muted-foreground bg-background">
-                                {type === "ISSUE" ? "Author" : "Maintainer"}
-                            </span>
+                            {type === "ISSUE" && (
+                                <span className="px-2 py-0.5 rounded-full border text-xs text-muted-foreground bg-background">
+                                    Author
+                                </span>
+                            )}
+                            {actions}
                         </div>
                     </div>
 
