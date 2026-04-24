@@ -6,6 +6,7 @@ import { Card } from "@/shared/ui/card";
 const CELL_SIZE = 10;
 const CELL_GAP = 3;
 const ROW_COUNT = 7;
+const MIN_COMPACT_CONTENT_WIDTH = 112;
 
 const WEEKDAY_LABELS = [
 	{ row: 2, label: "Mon" },
@@ -90,6 +91,15 @@ const formatDate = (dateKey: string) => {
 	}).format(date);
 };
 
+const formatRangeLabel = (dateKey: string) => {
+	const date = parseLocalDateKey(dateKey);
+
+	return new Intl.DateTimeFormat("en-US", {
+		month: "short",
+		day: "numeric",
+	}).format(date);
+};
+
 interface ContributionCell {
 	date: string;
 	count: number;
@@ -102,7 +112,7 @@ export const PostContributionGraph = () => {
 		postQueries.contributions(range),
 	);
 
-	const { weeks, monthLabels } = useMemo(() => {
+	const { weeks, rangeLabels } = useMemo(() => {
 		const from = data?.from ?? range.from;
 		const to = data?.to ?? range.to;
 		const countByDate = new Map(
@@ -114,8 +124,6 @@ export const PostContributionGraph = () => {
 		const calendarEnd = getEndOfWeek(rangeEnd);
 		const allDates = getDateRange(toDateKey(calendarStart), toDateKey(calendarEnd));
 		const nextWeeks: ContributionCell[][] = [];
-		const nextMonthLabels: Array<{ key: string; label: string; weekIndex: number }> = [];
-		const formatter = new Intl.DateTimeFormat("en-US", { month: "short" });
 
 		allDates.forEach((dateKey, index) => {
 			const date = parseLocalDateKey(dateKey);
@@ -131,20 +139,19 @@ export const PostContributionGraph = () => {
 				count: isInRange ? (countByDate.get(dateKey) ?? 0) : 0,
 				isInRange,
 			});
-
-			if (isInRange && (date.getDate() === 1 || dateKey === from)) {
-				nextMonthLabels.push({
-					key: dateKey,
-					label: formatter.format(date),
-					weekIndex,
-				});
-			}
 		});
 
-		return { weeks: nextWeeks, monthLabels: nextMonthLabels };
+		return {
+			weeks: nextWeeks,
+			rangeLabels: {
+				from: formatRangeLabel(from),
+				to: formatRangeLabel(to),
+			},
+		};
 	}, [data, range.from, range.to]);
 
 	const graphWidth = weeks.length * CELL_SIZE + (weeks.length - 1) * CELL_GAP;
+	const contentWidth = Math.max(graphWidth, MIN_COMPACT_CONTENT_WIDTH);
 	const graphGridStyle = {
 		gridTemplateColumns: `repeat(${weeks.length}, ${CELL_SIZE}px)`,
 		columnGap: `${CELL_GAP}px`,
@@ -179,20 +186,10 @@ export const PostContributionGraph = () => {
 							))}
 						</div>
 
-						<div className="space-y-1.5" style={{ width: graphWidth }}>
-							<div
-								className="grid h-4 text-[10px] leading-4 text-muted-foreground"
-								style={graphGridStyle}
-							>
-								{monthLabels.map((month) => (
-									<span
-										key={month.key}
-										className="whitespace-nowrap"
-										style={{ gridColumnStart: month.weekIndex + 1 }}
-									>
-										{month.label}
-									</span>
-								))}
+						<div className="space-y-1.5" style={{ width: contentWidth }}>
+							<div className="flex h-4 items-center justify-between gap-2 text-[10px] leading-4 text-muted-foreground">
+								<span className="whitespace-nowrap">{rangeLabels.from}</span>
+								<span className="whitespace-nowrap text-right">{rangeLabels.to}</span>
 							</div>
 
 							<div className="grid" style={graphGridStyle}>
