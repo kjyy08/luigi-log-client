@@ -15,7 +15,7 @@ interface CommentBoxProps extends ComponentProps<"div"> {
 
 export const CommentBox = ({ author, date, content, type = "ISSUE", actions, className, ...props }: CommentBoxProps) => {
     return (
-        <div className={cn("flex gap-4", className)} {...props}>
+        <div className={cn("flex gap-0 md:gap-4", className)} {...props}>
             <div className="hidden md:block flex-none">
                 <div className="w-10 h-10 rounded-full border bg-muted overflow-hidden">
                     {author.avatarUrl ? (
@@ -29,9 +29,9 @@ export const CommentBox = ({ author, date, content, type = "ISSUE", actions, cla
             </div>
 
             <div className="flex-1 min-w-0">
-                <div className="border rounded-md bg-background shadow-sm overflow-hidden">
+                <div className="overflow-hidden border-y bg-background shadow-none sm:rounded-md sm:border sm:shadow-sm">
                     {/* Header */}
-                    <div className="flex items-center gap-2 px-4 py-3 bg-muted/40 border-b text-sm">
+                    <div className="flex items-center gap-2 border-b bg-muted/40 px-3 py-3 text-sm sm:px-4">
                         <span className="font-semibold text-foreground hover:underline cursor-pointer">
                             {author.name}
                         </span>
@@ -49,7 +49,7 @@ export const CommentBox = ({ author, date, content, type = "ISSUE", actions, cla
                     </div>
 
                     {/* Body */}
-                    <div className="p-4 md:p-8 bg-background min-h-[200px]">
+                    <div className="min-h-[200px] bg-background p-3 sm:p-4 md:p-8">
                         <MarkdownView content={content} />
                     </div>
                 </div>

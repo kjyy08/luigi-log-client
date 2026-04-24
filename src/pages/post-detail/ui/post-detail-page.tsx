@@ -58,7 +58,7 @@ export const PostDetailPage = () => {
 	// const isOwner = useIsOwner();
 
 	return (
-		<article className="container max-w-7xl py-8 animate-fade-in">
+		<article className="mx-auto w-full max-w-7xl animate-fade-in px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
 			<IssueHeader
 				title={post.title}
 				postId={post.postId}
@@ -81,9 +81,10 @@ export const PostDetailPage = () => {
 				)}
 			</IssueHeader>
 
-			<div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
-				<div className="space-y-8 min-w-0">
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px] lg:gap-8">
+				<div className="min-w-0 space-y-6 sm:space-y-8">
 					<CommentBox
+						className="-mx-4 sm:mx-0"
 						author={{
 							name: post.author?.nickname || "Anonymous",
 							avatarUrl: post.author?.profileImageUrl,
