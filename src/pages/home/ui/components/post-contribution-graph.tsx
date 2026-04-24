@@ -3,10 +3,9 @@ import { useMemo } from "react";
 import { postQueries } from "@/entities/post/model/post.queries";
 import { Card } from "@/shared/ui/card";
 
-const CELL_SIZE = 10;
-const CELL_GAP = 3;
+const CELL_GAP = 4;
+const MAX_CELL_SIZE = 34;
 const ROW_COUNT = 7;
-const MIN_COMPACT_CONTENT_WIDTH = 112;
 
 const WEEKDAY_LABELS = [
 	{ row: 2, label: "Mon" },
@@ -112,7 +111,7 @@ export const PostContributionGraph = () => {
 		postQueries.contributions(range),
 	);
 
-	const { weeks, rangeLabels } = useMemo(() => {
+	const { weeks, rangeLabel } = useMemo(() => {
 		const from = data?.from ?? range.from;
 		const to = data?.to ?? range.to;
 		const countByDate = new Map(
@@ -143,18 +142,24 @@ export const PostContributionGraph = () => {
 
 		return {
 			weeks: nextWeeks,
-			rangeLabels: {
-				from: formatRangeLabel(from),
-				to: formatRangeLabel(to),
-			},
+			rangeLabel: `${formatRangeLabel(from)} – ${formatRangeLabel(to)}`,
 		};
 	}, [data, range.from, range.to]);
 
-	const graphWidth = weeks.length * CELL_SIZE + (weeks.length - 1) * CELL_GAP;
-	const contentWidth = Math.max(graphWidth, MIN_COMPACT_CONTENT_WIDTH);
+	const labelColumnWidth = 28;
+	const graphMaxWidth =
+		weeks.length * MAX_CELL_SIZE + (weeks.length - 1) * CELL_GAP;
+	const wrapperMaxWidth = labelColumnWidth + CELL_GAP * 2 + graphMaxWidth;
 	const graphGridStyle = {
-		gridTemplateColumns: `repeat(${weeks.length}, ${CELL_SIZE}px)`,
+		gridTemplateColumns: `repeat(${weeks.length}, minmax(0, 1fr))`,
 		columnGap: `${CELL_GAP}px`,
+	};
+	const weekGridStyle = {
+		gridTemplateRows: `repeat(${ROW_COUNT}, minmax(0, 1fr))`,
+		rowGap: `${CELL_GAP}px`,
+	};
+	const layoutGridStyle = {
+		gridTemplateColumns: `${labelColumnWidth}px minmax(0, ${graphMaxWidth}px)`,
 	};
 	const totalCount = data?.totalCount ?? 0;
 	const title = isError
@@ -169,16 +174,24 @@ export const PostContributionGraph = () => {
 		<div className="min-w-0 space-y-2">
 			<h2 className="text-base font-semibold">{title}</h2>
 			<Card className="overflow-hidden border-border bg-background p-3 sm:p-4">
-				<div className="overflow-x-auto pb-1">
-					<div className="flex w-max max-w-full gap-2">
+				<div
+					className="mx-auto w-full max-w-full space-y-2"
+					style={{ maxWidth: wrapperMaxWidth }}
+				>
+					<div className="grid gap-x-2" style={layoutGridStyle}>
+						<div aria-hidden="true" />
+						<div className="mb-1.5 text-center text-[11px] leading-4 text-muted-foreground">
+							{rangeLabel}
+						</div>
+
 						<div
-							className="grid w-6 shrink-0 pt-[22px] text-[10px] leading-[10px] text-muted-foreground"
-							style={{ gridTemplateRows: `repeat(${ROW_COUNT}, ${CELL_SIZE}px)`, rowGap: `${CELL_GAP}px` }}
+							className="grid text-[10px] leading-none text-muted-foreground"
+							style={weekGridStyle}
 						>
 							{WEEKDAY_LABELS.map((weekday) => (
 								<span
 									key={weekday.label}
-									className="flex h-[10px] items-center"
+									className="flex items-center"
 									style={{ gridRowStart: weekday.row }}
 								>
 									{weekday.label}
@@ -186,49 +199,42 @@ export const PostContributionGraph = () => {
 							))}
 						</div>
 
-						<div className="space-y-1.5" style={{ width: contentWidth }}>
-							<div className="flex h-4 items-center justify-between gap-2 text-[10px] leading-4 text-muted-foreground">
-								<span className="whitespace-nowrap">{rangeLabels.from}</span>
-								<span className="whitespace-nowrap text-right">{rangeLabels.to}</span>
-							</div>
+						<div className="grid w-full" style={graphGridStyle}>
+							{weeks.map((week, weekIndex) => (
+								<div key={weekIndex} className="grid" style={weekGridStyle}>
+									{week.map((day) => {
+										const postLabel = day.count === 1 ? "post" : "posts";
+										const label = `${day.count} ${postLabel} on ${formatDate(day.date)}`;
 
-							<div className="grid" style={graphGridStyle}>
-								{weeks.map((week, weekIndex) => (
-									<div key={weekIndex} className="grid gap-[3px]">
-										{week.map((day) => {
-											const postLabel = day.count === 1 ? "post" : "posts";
-											const label = `${day.count} ${postLabel} on ${formatDate(day.date)}`;
-
-											return (
-												<div
-													key={day.date}
-													aria-hidden={!day.isInRange}
-													aria-label={day.isInRange ? label : undefined}
-													className={`h-[10px] w-[10px] rounded-[2px] ${
-														day.isInRange
-															? getContributionClassName(day.count)
-															: "bg-transparent"
-													}`}
-													title={day.isInRange ? label : undefined}
-												/>
-											);
-										})}
-									</div>
-								))}
-							</div>
-
-							<div className="mt-2 flex items-center justify-end gap-1 text-[11px] text-muted-foreground">
-								<span>Less</span>
-								{[0, 1, 2, 3, 4].map((count) => (
-									<div
-										key={count}
-										className={`h-[10px] w-[10px] rounded-[2px] ${getContributionClassName(count)}`}
-										aria-hidden="true"
-									/>
-								))}
-								<span>More</span>
-							</div>
+										return (
+											<div
+												key={day.date}
+												aria-hidden={!day.isInRange}
+												aria-label={day.isInRange ? label : undefined}
+												className={`aspect-square w-full rounded-[3px] ${
+													day.isInRange
+														? getContributionClassName(day.count)
+														: "bg-transparent"
+												}`}
+												title={day.isInRange ? label : undefined}
+											/>
+										);
+									})}
+								</div>
+							))}
 						</div>
+					</div>
+
+					<div className="flex items-center justify-end gap-1 text-[11px] text-muted-foreground">
+						<span>Less</span>
+						{[0, 1, 2, 3, 4].map((count) => (
+							<div
+								key={count}
+								className={`h-[10px] w-[10px] rounded-[2px] ${getContributionClassName(count)}`}
+								aria-hidden="true"
+							/>
+						))}
+						<span>More</span>
 					</div>
 				</div>
 			</Card>
