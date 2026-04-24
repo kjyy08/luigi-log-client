@@ -54,8 +54,11 @@ export const HomeSkeleton = () => {
                                     <Skeleton className="h-[10px] w-6" />
                                     <Skeleton className="h-[10px] w-6" />
                                 </div>
-                                <div className="space-y-2">
-                                    <Skeleton className="h-4 w-[88px]" />
+                                <div className="w-[112px] space-y-2">
+                                    <div className="flex h-4 items-center justify-between gap-2">
+                                        <Skeleton className="h-3 w-10" />
+                                        <Skeleton className="h-3 w-10" />
+                                    </div>
                                     <div className="grid grid-flow-col grid-rows-7 gap-[3px]">
                                         {Array.from({ length: 35 }).map((_, i) => (
                                             <Skeleton key={i} className="h-[10px] w-[10px] rounded-[2px]" />
