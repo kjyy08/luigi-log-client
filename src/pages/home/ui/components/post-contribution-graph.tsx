@@ -80,7 +80,7 @@ export const PostContributionGraph = () => {
 	}, [days]);
 
 	return (
-		<div className="space-y-2">
+		<div className="min-w-0 space-y-2">
 			<h2 className="text-base font-semibold">
 				{isError
 					? "Unable to load post activity"
@@ -88,31 +88,31 @@ export const PostContributionGraph = () => {
 						? "Loading posts..."
 						: `${data?.totalCount ?? 0} posts in the last year`}
 			</h2>
-			<Card className="bg-background border-border p-4">
-				<div className="flex gap-2">
-					<div className="flex flex-col justify-between pt-6 text-[10px] text-muted-foreground leading-[13px]">
+			<Card className="overflow-hidden bg-background border-border p-2 sm:p-4">
+				<div className="flex min-w-0 gap-2">
+					<div className="flex shrink-0 flex-col justify-between pt-6 text-[10px] text-muted-foreground leading-[12px] sm:leading-[13px]">
 						<span>Mon</span>
 						<span>Wed</span>
 						<span>Fri</span>
 					</div>
 
-					<div className="flex flex-col gap-1 overflow-x-auto flex-1">
-						<div className="flex justify-between text-[10px] text-muted-foreground px-1 min-w-max">
+					<div className="flex min-w-0 flex-1 flex-col gap-1 overflow-x-auto pb-1">
+						<div className="flex min-w-[680px] justify-between px-1 text-[10px] text-muted-foreground sm:min-w-max">
 							{monthLabels.map((month) => (
 								<span key={month.key}>{month.label}</span>
 							))}
 						</div>
 
-						<div className="grid grid-rows-7 grid-flow-col gap-[3px] h-[100px] min-w-max">
+						<div className="grid h-[92px] min-w-[680px] grid-flow-col grid-rows-7 gap-[2px] sm:h-[100px] sm:min-w-max sm:gap-[3px]">
 							{days.map((day) => (
 								<div
 									key={day.date}
-									className={`w-[10px] h-[10px] rounded-sm ${getContributionClassName(day.count)}`}
+									className={`h-[9px] w-[9px] rounded-sm sm:h-[10px] sm:w-[10px] ${getContributionClassName(day.count)}`}
 									title={`${day.date}: ${day.count} posts`}
 								/>
 							))}
 						</div>
-						<div className="flex items-center justify-end gap-2 text-xs text-muted-foreground mt-2">
+						<div className="mt-2 flex flex-wrap items-center justify-end gap-1.5 text-xs text-muted-foreground sm:gap-2">
 							<span>Less</span>
 							<div className="w-[10px] h-[10px] bg-[#ebedf0] dark:bg-[#161b22] rounded-sm" />
 							<div className="w-[10px] h-[10px] bg-[#9be9a8] rounded-sm" />

@@ -77,7 +77,7 @@ export const LoginButton = () => {
         <Button
             onClick={openLoginModal}
             variant="default"
-            className="bg-luigi-green hover:bg-luigi-green/90 text-white font-bold"
+            className="h-8 px-2 text-xs font-bold text-white bg-luigi-green hover:bg-luigi-green/90 sm:h-9 sm:px-4 sm:text-sm"
         >
             Sign in
         </Button>

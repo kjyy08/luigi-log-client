@@ -1,6 +1,7 @@
-import { BookMarked, GitFork, Star } from "lucide-react";
+import { BookMarked } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { PostSummary } from "@/entities/post/model/post.dto";
+import { PostStats } from "@/entities/post/ui/post-stats";
 import { cn } from "@/shared/lib/utils";
 
 interface ProjectCardProps {
@@ -29,23 +30,14 @@ export const ProjectCard = ({ project, className }: ProjectCardProps) => {
 				</div>
 			</div>
 
-			<div className="flex items-center gap-4 text-xs text-muted-foreground mt-auto">
+			<div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground mt-auto">
 				{project.tags && project.tags.length > 0 && (
 					<div className="flex items-center gap-1">
 						<span className="inline-block w-3 h-3 rounded-full bg-luigi-green/80" />
 						<span>{project.tags[0]}</span>
 					</div>
 				)}
-
-				{/* Mocking Stars and Forks for visual parity with GitHub */}
-				<div className="flex items-center gap-1 hover:text-luigi-green cursor-pointer">
-					<Star className="h-3 w-3" />
-					<span>0</span>
-				</div>
-				<div className="flex items-center gap-1 hover:text-luigi-green cursor-pointer">
-					<GitFork className="h-3 w-3" />
-					<span>0</span>
-				</div>
+				<PostStats viewCount={project.viewCount} commentCount={project.commentCount} />
 			</div>
 		</div>
 	);

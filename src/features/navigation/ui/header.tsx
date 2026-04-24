@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ThemeToggle } from "@/shared/ui/theme-toggle";
 import { MobileMenu } from "./mobile-menu";
@@ -13,6 +13,10 @@ interface HeaderProps {
 export const Header = ({ rightActions }: HeaderProps) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const initialSearch = location.pathname.startsWith("/blog")
+        ? (searchParams.get("q") ?? "")
+        : "";
 
     // Mapping routes to tab values
     const getTabValue = () => {
@@ -43,11 +47,19 @@ export const Header = ({ rightActions }: HeaderProps) => {
         }
     };
 
+    const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const query = String(formData.get("q") ?? "").trim();
+
+        navigate(query ? `/blog?q=${encodeURIComponent(query)}` : "/blog");
+    };
+
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container flex h-16 items-center gap-4">
+        <header className="sticky top-0 z-50 w-full max-w-full overflow-x-clip border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container flex h-16 min-w-0 items-center gap-2 px-3 sm:gap-4 sm:px-4">
                 {/* Logo */}
-                <Link to="/" className="mr-6 flex items-center gap-2 font-bold text-xl text-foreground">
+                <Link to="/" className="mr-1 flex shrink-0 items-center gap-1 font-bold text-lg text-foreground sm:mr-6 sm:gap-2 sm:text-xl">
                     <span className="text-luigi-green">Luigi</span>
                     <span className="text-luigi-blue">Log</span>
                 </Link>
@@ -85,18 +97,24 @@ export const Header = ({ rightActions }: HeaderProps) => {
                 </div>
 
                 {/* Spacer */}
-                <div className="flex-1" />
+                <div className="min-w-0 flex-1" />
 
                 {/* Search */}
-                <div className="hidden md:flex items-center w-full max-w-xs mr-4">
+                <form onSubmit={handleSearchSubmit} className="hidden md:flex items-center w-full max-w-xs mr-4">
                     <div className="relative w-full">
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Type / to search" className="pl-8 h-9 bg-muted/50 border-none focus-visible:ring-1" />
+                        <Input
+                            key={initialSearch}
+                            name="q"
+                            defaultValue={initialSearch}
+                            placeholder="Search posts..."
+                            className="pl-8 h-9 bg-muted/50 border-none focus-visible:ring-1"
+                        />
                     </div>
-                </div>
+                </form>
 
                 {/* Right Side Actions */}
-                <div className="flex items-center gap-3">
+                <div className="flex shrink-0 items-center gap-1 sm:gap-3">
                     <ThemeToggle />
                     {rightActions}
                     <MobileMenu />

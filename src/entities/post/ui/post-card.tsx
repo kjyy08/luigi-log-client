@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import type { PostSummary } from "../model/post.dto";
+import { PostStats } from "./post-stats";
 
 interface PostCardProps {
 	post: PostSummary;
@@ -86,21 +87,24 @@ export const PostCard = ({
 				</h3>
 			</div>
 
-			<div className="mt-auto flex flex-wrap gap-2 pt-2">
-				{post.tags && post.tags.length > 0 ? (
-					post.tags.map((tag) => (
+			<div className="mt-auto space-y-3 pt-2">
+				<div className="flex flex-wrap gap-2">
+					{post.tags && post.tags.length > 0 ? (
+						post.tags.map((tag) => (
 						<span
 							key={tag}
 							className="inline-flex items-center rounded-md bg-secondary/50 border border-border px-2 py-0.5 text-[11px] font-medium text-secondary-foreground transition-colors group-hover:border-luigi-green/30"
 						>
 							#{tag}
 						</span>
-					))
-				) : (
-					<span className="text-[11px] text-muted-foreground opacity-50 italic">
-						No tags
-					</span>
-				)}
+						))
+					) : (
+						<span className="text-[11px] text-muted-foreground opacity-50 italic">
+							No tags
+						</span>
+					)}
+				</div>
+				<PostStats viewCount={post.viewCount} commentCount={post.commentCount} />
 			</div>
 		</Link>
 	);
