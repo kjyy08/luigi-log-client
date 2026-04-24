@@ -64,6 +64,8 @@ export const PostDetailPage = () => {
 				postId={post.postId}
 				createdAt={post.createdAt}
 				authorName={post.author?.nickname || "Anonymous"}
+				viewCount={post.viewCount}
+				commentCount={post.commentCount}
 				status={post.status || "PUBLISHED"} // Add status field if API supports it
 				type={post.type}
 			>

@@ -1,19 +1,20 @@
 import { Badge } from "@/shared/ui/badge";
 import { cn } from "@/shared/lib/utils";
-import { MessageSquare } from "lucide-react";
+import { PostStats } from "@/entities/post/ui/post-stats";
 
 interface IssueHeaderProps {
     title: string;
     postId: number | string;
     createdAt: string;
     authorName: string;
+    viewCount?: number;
     commentCount?: number;
     status?: string;
     type?: string;
     children?: React.ReactNode;
 }
 
-export const IssueHeader = ({ title, createdAt, authorName, commentCount, status = "PUBLISHED", type, children }: IssueHeaderProps) => {
+export const IssueHeader = ({ title, createdAt, authorName, viewCount, commentCount, status = "PUBLISHED", type, children }: IssueHeaderProps) => {
     const isOpen = status === "PUBLISHED" || status === "OPEN";
 
     return (
@@ -45,10 +46,7 @@ export const IssueHeader = ({ title, createdAt, authorName, commentCount, status
                     opened this issue on {new Date(createdAt).toLocaleDateString()}
                 </span>
                 <span>·</span>
-                <span className="flex items-center gap-1">
-                    <MessageSquare className="h-4 w-4" />
-                    {commentCount || 0} comments
-                </span>
+                <PostStats viewCount={viewCount} commentCount={commentCount} showLabels />
             </div>
         </div>
     );

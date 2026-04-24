@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Eye, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { postQueries } from "@/entities/post/model/post.queries";
+import { PostStats } from "@/entities/post/ui/post-stats";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { RecentPostListSkeleton } from "./recent-post-list-skeleton";
 
 export const RecentPostList = () => {
-	const { data, isError, isLoading } = useQuery(
+	const { data, isError, isLoading, refetch, isFetching } = useQuery(
 		postQueries.list({ limit: 6, status: "PUBLISHED" }),
 	);
 	const navigate = useNavigate();
@@ -22,9 +22,20 @@ export const RecentPostList = () => {
 		return (
 			<div className="space-y-4">
 				<h2 className="text-base font-semibold">Recent Posts</h2>
-				<p className="text-xs text-muted-foreground">
-					Failed to load recent posts.
-				</p>
+				<div className="rounded-lg border border-dashed border-border bg-muted/20 p-4">
+					<p className="text-sm font-medium text-foreground">Recent posts are unavailable.</p>
+					<p className="mt-1 text-xs text-muted-foreground">
+						The blog API returned an error. You can retry or open the full blog list.
+					</p>
+					<div className="mt-3 flex flex-wrap gap-2">
+						<Button size="sm" variant="outline" onClick={() => refetch()} disabled={isFetching}>
+							{isFetching ? "Retrying..." : "Retry"}
+						</Button>
+						<Button size="sm" variant="ghost" onClick={() => navigate("/blog")}>
+							Go to Blog
+						</Button>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -35,12 +46,12 @@ export const RecentPostList = () => {
 		<div className="space-y-4">
 			<h2 className="text-base font-semibold">Recent Posts</h2>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-3 min-w-0">
 				{posts.slice(0, 6).map((post) => {
 					return (
 						<Card
 							key={post.postId}
-							className="bg-background border-border hover:border-luigi-green transition-colors cursor-pointer group flex flex-col h-[130px] shadow-sm relative"
+							className="bg-background border-border hover:border-luigi-green transition-colors cursor-pointer group flex flex-col min-h-[130px] shadow-sm relative"
 							onClick={() =>
 								navigate(`/posts/${post.author.username}/${post.slug}`)
 							}
@@ -50,16 +61,7 @@ export const RecentPostList = () => {
 									<span className="text-sm font-bold text-luigi-blue group-hover:underline truncate pr-16">
 										{post.title}
 									</span>
-									<div className="absolute top-3 right-4 flex items-center gap-3 text-xs text-muted-foreground bg-background/80 pl-2">
-										<div className="flex items-center gap-1">
-											<Eye className="w-3 h-3" />
-											<span>{post.viewCount ?? 0}</span>
-										</div>
-										<div className="flex items-center gap-1">
-											<MessageSquare className="w-3 h-3" />
-											<span>{post.commentCount ?? 0}</span>
-										</div>
-									</div>
+									<PostStats viewCount={post.viewCount} commentCount={post.commentCount} className="absolute top-3 right-4 bg-background/80 pl-2" iconClassName="h-3 w-3" />
 								</div>
 							</CardHeader>
 							<CardContent className="px-4 pb-3 pt-0 flex-1 flex flex-col justify-between">

@@ -13,31 +13,31 @@ export const RecentGuestbook = () => {
     const recentGuestbooks = guestbooks.slice(0, 10);
 
     return (
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
             <h2 className="text-base font-semibold">Recent Guestbook</h2>
-            <div className="flex flex-col gap-0 border-l border-border ml-2 pl-8 py-2 relative">
+            <div className="relative ml-5 flex min-w-0 flex-col gap-0 border-l border-border py-2 pl-5 sm:ml-2 sm:pl-8">
                 {recentGuestbooks.map((entry) => (
                     <div key={entry.guestbookId} className="relative pb-8 last:pb-2">
-                        <div className="absolute -left-12 -top-1.5 bg-background rounded-full p-1 border border-border">
-                            <Avatar className="h-6 w-6">
+                        <div className="absolute -left-9 -top-1.5 bg-background rounded-full p-1 border border-border sm:-left-12">
+                            <Avatar className="h-6 w-6 shrink-0">
                                 <AvatarImage src={entry.author.profileImageUrl ?? undefined} alt={entry.author.nickname} />
                                 <AvatarFallback>{entry.author.nickname[0]}</AvatarFallback>
                             </Avatar>
                         </div>
 
-                        <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-2 text-sm">
-                                <span className="font-semibold text-foreground">
+                        <div className="flex min-w-0 flex-col gap-1">
+                            <div className="flex min-w-0 flex-wrap items-center gap-2 text-sm">
+                                <span className="font-semibold text-foreground truncate">
                                     {entry.author.nickname}
                                 </span>
-                                <span className="text-muted-foreground flex items-center gap-1">
-                                    <span className="text-xs">@{entry.author.username}</span>
+                                <span className="text-muted-foreground flex min-w-0 items-center gap-1">
+                                    <span className="truncate text-xs">@{entry.author.username}</span>
                                 </span>
-                                <span className="text-xs text-muted-foreground ml-auto">
+                                <span className="ml-0 text-xs text-muted-foreground sm:ml-auto">
                                     {new Date(entry.createdAt).toLocaleDateString()}
                                 </span>
                             </div>
-                            <div className="text-sm text-foreground/80 bg-muted/30 p-3 rounded-md border border-border mt-1 hover:border-muted-foreground/50 transition-colors whitespace-pre-wrap line-clamp-3">
+                            <div className="mt-1 min-w-0 whitespace-pre-wrap break-words rounded-md border border-border bg-muted/30 p-3 text-sm text-foreground/80 transition-colors line-clamp-3 hover:border-muted-foreground/50">
                                 {entry.content}
                             </div>
                         </div>
