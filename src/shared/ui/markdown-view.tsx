@@ -51,7 +51,7 @@ interface MarkdownViewProps {
 
 export const MarkdownView = ({ content, className }: MarkdownViewProps) => {
     return (
-        <div className={cn("prose dark:prose-invert max-w-none prose-pre:bg-transparent prose-pre:p-0 break-words", className)}>
+        <div className={cn("prose max-w-none break-words dark:prose-invert prose-img:max-w-full prose-img:rounded-md prose-pre:bg-transparent prose-pre:p-0", className)}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
