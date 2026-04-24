@@ -47,31 +47,36 @@ export const HomeSkeleton = () => {
                     {/* Contribution Graph Skeleton */}
                     <div className="border border-border rounded-lg p-4 space-y-3 overflow-hidden">
                         <Skeleton className="h-4 w-48" />
-                        <div className="overflow-x-auto pb-1">
-                            <div className="flex w-max max-w-full gap-2">
-                                <div className="space-y-[16px] pt-[22px] w-6">
-                                    <Skeleton className="h-[10px] w-6" />
-                                    <Skeleton className="h-[10px] w-6" />
-                                    <Skeleton className="h-[10px] w-6" />
+                        <div className="mx-auto w-full max-w-[222px] space-y-2">
+                            <div className="grid grid-cols-[28px_minmax(0,186px)] gap-x-2">
+                                <div aria-hidden="true" />
+                                <div className="mb-1.5 flex h-4 justify-center">
+                                    <Skeleton className="h-3 w-24" />
                                 </div>
-                                <div className="w-[112px] space-y-2">
-                                    <div className="flex h-4 items-center justify-between gap-2">
-                                        <Skeleton className="h-3 w-10" />
-                                        <Skeleton className="h-3 w-10" />
-                                    </div>
-                                    <div className="grid grid-flow-col grid-rows-7 gap-[3px]">
-                                        {Array.from({ length: 35 }).map((_, i) => (
-                                            <Skeleton key={i} className="h-[10px] w-[10px] rounded-[2px]" />
-                                        ))}
-                                    </div>
-                                    <div className="flex justify-end gap-1">
-                                        <Skeleton className="h-3 w-6" />
-                                        {Array.from({ length: 5 }).map((_, i) => (
-                                            <Skeleton key={i} className="h-[10px] w-[10px] rounded-[2px]" />
-                                        ))}
-                                        <Skeleton className="h-3 w-6" />
-                                    </div>
+                                <div className="grid grid-rows-7 gap-1 text-[10px] leading-none">
+                                    <Skeleton className="row-start-2 h-3 w-6" />
+                                    <Skeleton className="row-start-4 h-3 w-6" />
+                                    <Skeleton className="row-start-6 h-3 w-5" />
                                 </div>
+                                <div className="grid grid-cols-5 gap-1">
+                                    {Array.from({ length: 5 }).map((_, weekIndex) => (
+                                        <div key={weekIndex} className="grid grid-rows-7 gap-1">
+                                            {Array.from({ length: 7 }).map((__, dayIndex) => (
+                                                <Skeleton
+                                                    key={dayIndex}
+                                                    className="aspect-square w-full rounded-[3px]"
+                                                />
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="flex justify-end gap-1">
+                                <Skeleton className="h-3 w-6" />
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <Skeleton key={i} className="h-[10px] w-[10px] rounded-[2px]" />
+                                ))}
+                                <Skeleton className="h-3 w-6" />
                             </div>
                         </div>
                     </div>
