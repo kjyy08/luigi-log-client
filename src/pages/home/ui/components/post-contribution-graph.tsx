@@ -8,9 +8,9 @@ const CELL_GAP = 3;
 const ROW_COUNT = 7;
 
 const WEEKDAY_LABELS = [
-	{ row: 2, label: "월" },
-	{ row: 4, label: "수" },
-	{ row: 6, label: "금" },
+	{ row: 2, label: "Mon" },
+	{ row: 4, label: "Wed" },
+	{ row: 6, label: "Fri" },
 ];
 
 const toDateKey = (date: Date) => {
@@ -35,10 +35,17 @@ const getContributionClassName = (count: number) => {
 	return "bg-[#ebedf0] dark:bg-[#161b22]";
 };
 
-const getLastYearRange = () => {
+const getLastMonthRange = () => {
 	const to = new Date();
 	const from = new Date(to);
-	from.setDate(to.getDate() - 364);
+	const targetMonth = to.getMonth() - 1;
+	const normalizedTargetMonth = (targetMonth + 12) % 12;
+
+	from.setMonth(targetMonth);
+
+	if (from.getMonth() !== normalizedTargetMonth) {
+		from.setDate(0);
+	}
 
 	return {
 		from: toDateKey(from),
@@ -73,10 +80,14 @@ const getDateRange = (from: string, to: string) => {
 	return dates;
 };
 
-const formatKoreanDate = (dateKey: string) => {
+const formatDate = (dateKey: string) => {
 	const date = parseLocalDateKey(dateKey);
 
-	return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+	return new Intl.DateTimeFormat("en-US", {
+		month: "short",
+		day: "numeric",
+		year: "numeric",
+	}).format(date);
 };
 
 interface ContributionCell {
@@ -86,7 +97,7 @@ interface ContributionCell {
 }
 
 export const PostContributionGraph = () => {
-	const range = useMemo(() => getLastYearRange(), []);
+	const range = useMemo(() => getLastMonthRange(), []);
 	const { data, isError, isLoading } = useQuery(
 		postQueries.contributions(range),
 	);
@@ -104,7 +115,7 @@ export const PostContributionGraph = () => {
 		const allDates = getDateRange(toDateKey(calendarStart), toDateKey(calendarEnd));
 		const nextWeeks: ContributionCell[][] = [];
 		const nextMonthLabels: Array<{ key: string; label: string; weekIndex: number }> = [];
-		const formatter = new Intl.DateTimeFormat("ko-KR", { month: "short" });
+		const formatter = new Intl.DateTimeFormat("en-US", { month: "short" });
 
 		allDates.forEach((dateKey, index) => {
 			const date = parseLocalDateKey(dateKey);
@@ -121,7 +132,7 @@ export const PostContributionGraph = () => {
 				isInRange,
 			});
 
-			if (isInRange && date.getDate() === 1) {
+			if (isInRange && (date.getDate() === 1 || dateKey === from)) {
 				nextMonthLabels.push({
 					key: dateKey,
 					label: formatter.format(date),
@@ -138,20 +149,23 @@ export const PostContributionGraph = () => {
 		gridTemplateColumns: `repeat(${weeks.length}, ${CELL_SIZE}px)`,
 		columnGap: `${CELL_GAP}px`,
 	};
+	const totalCount = data?.totalCount ?? 0;
 	const title = isError
-		? "게시글 활동을 불러올 수 없습니다"
+		? "Unable to load post activity"
 		: isLoading
-			? "게시글을 불러오는 중..."
-			: `최근 12개월 게시글 ${data?.totalCount ?? 0}개`;
+			? "Loading posts..."
+			: totalCount === 1
+				? "1 post in the last month"
+				: `${totalCount} posts in the last month`;
 
 	return (
 		<div className="min-w-0 space-y-2">
 			<h2 className="text-base font-semibold">{title}</h2>
 			<Card className="overflow-hidden border-border bg-background p-3 sm:p-4">
 				<div className="overflow-x-auto pb-1">
-					<div className="flex w-max min-w-[690px] gap-2">
+					<div className="flex w-max max-w-full gap-2">
 						<div
-							className="grid shrink-0 pt-[22px] text-[10px] leading-[10px] text-muted-foreground"
+							className="grid w-6 shrink-0 pt-[22px] text-[10px] leading-[10px] text-muted-foreground"
 							style={{ gridTemplateRows: `repeat(${ROW_COUNT}, ${CELL_SIZE}px)`, rowGap: `${CELL_GAP}px` }}
 						>
 							{WEEKDAY_LABELS.map((weekday) => (
@@ -185,7 +199,8 @@ export const PostContributionGraph = () => {
 								{weeks.map((week, weekIndex) => (
 									<div key={weekIndex} className="grid gap-[3px]">
 										{week.map((day) => {
-											const label = `${formatKoreanDate(day.date)} 게시글 ${day.count}개`;
+											const postLabel = day.count === 1 ? "post" : "posts";
+											const label = `${day.count} ${postLabel} on ${formatDate(day.date)}`;
 
 											return (
 												<div
@@ -206,7 +221,7 @@ export const PostContributionGraph = () => {
 							</div>
 
 							<div className="mt-2 flex items-center justify-end gap-1 text-[11px] text-muted-foreground">
-								<span>적음</span>
+								<span>Less</span>
 								{[0, 1, 2, 3, 4].map((count) => (
 									<div
 										key={count}
@@ -214,7 +229,7 @@ export const PostContributionGraph = () => {
 										aria-hidden="true"
 									/>
 								))}
-								<span>많음</span>
+								<span>More</span>
 							</div>
 						</div>
 					</div>

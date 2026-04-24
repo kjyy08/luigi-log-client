@@ -48,15 +48,19 @@ export const HomeSkeleton = () => {
                     <div className="border border-border rounded-lg p-4 space-y-3 overflow-hidden">
                         <Skeleton className="h-4 w-48" />
                         <div className="overflow-x-auto pb-1">
-                            <div className="flex w-max min-w-[690px] gap-2">
-                                <div className="space-y-[16px] pt-[22px]">
-                                    <Skeleton className="h-[10px] w-4" />
-                                    <Skeleton className="h-[10px] w-4" />
-                                    <Skeleton className="h-[10px] w-4" />
+                            <div className="flex w-max max-w-full gap-2">
+                                <div className="space-y-[16px] pt-[22px] w-6">
+                                    <Skeleton className="h-[10px] w-6" />
+                                    <Skeleton className="h-[10px] w-6" />
+                                    <Skeleton className="h-[10px] w-6" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Skeleton className="h-4 w-[690px]" />
-                                    <Skeleton className="h-[88px] w-[690px]" />
+                                    <Skeleton className="h-4 w-[88px]" />
+                                    <div className="grid grid-flow-col grid-rows-7 gap-[3px]">
+                                        {Array.from({ length: 35 }).map((_, i) => (
+                                            <Skeleton key={i} className="h-[10px] w-[10px] rounded-[2px]" />
+                                        ))}
+                                    </div>
                                     <div className="flex justify-end gap-1">
                                         <Skeleton className="h-3 w-6" />
                                         {Array.from({ length: 5 }).map((_, i) => (
