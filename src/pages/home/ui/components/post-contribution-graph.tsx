@@ -6,6 +6,7 @@ import { Card } from "@/shared/ui/card";
 const CELL_SIZE = 10;
 const CELL_GAP = 3;
 const ROW_COUNT = 7;
+const TRAILING_SCROLL_PADDING = 12;
 
 const WEEKDAY_LABELS = [
 	{ row: 2, label: "Mon" },
@@ -211,78 +212,85 @@ export const PostContributionGraph = () => {
 			</div>
 			<Card className="overflow-hidden border-border bg-background p-3 sm:p-4">
 				<div className="overflow-x-auto overflow-y-hidden pb-1">
-					<div className="space-y-2" style={{ width: wrapperWidth }}>
-						<div className="grid gap-x-[6px]" style={layoutGridStyle}>
-							<div aria-hidden="true" />
-							<div
-								className="relative mb-1 h-4 text-[10px] leading-4 text-muted-foreground"
-								style={{ width: graphWidth }}
-							>
-								{monthLabels.map((month) => (
-									<span
-										key={`${month.label}-${month.weekIndex}`}
-										className="absolute top-0"
-										style={{
-											left: month.weekIndex * (CELL_SIZE + CELL_GAP),
-										}}
-									>
-										{month.label}
-									</span>
-								))}
-							</div>
-
-							<div
-								className="grid text-[10px] leading-none text-muted-foreground"
-								style={weekGridStyle}
-							>
-								{WEEKDAY_LABELS.map((weekday) => (
-									<span
-										key={weekday.label}
-										className="flex items-center"
-										style={{ gridRowStart: weekday.row }}
-									>
-										{weekday.label}
-									</span>
-								))}
-							</div>
-
-							<div className="grid" style={graphGridStyle}>
-								{weeks.map((week, weekIndex) => (
-									<div key={weekIndex} className="grid" style={weekGridStyle}>
-										{week.map((day) => {
-											const postLabel = day.count === 1 ? "post" : "posts";
-											const label = `${day.count} ${postLabel} on ${formatDate(day.date)}`;
-
-											return (
-												<div
-													key={day.date}
-													aria-hidden={!day.isInRange}
-													aria-label={day.isInRange ? label : undefined}
-													className={`h-[10px] w-[10px] rounded-[2px] ${
-														day.isInRange
-															? getContributionClassName(day.count)
-															: "bg-transparent"
-													}`}
-													title={day.isInRange ? label : undefined}
-												/>
-											);
-										})}
-									</div>
-								))}
-							</div>
-						</div>
-
-						<div className="flex items-center justify-end gap-1 text-[11px] text-muted-foreground">
-							<span>Less</span>
-							{[0, 1, 2, 3, 4].map((count) => (
+					<div className="flex w-max">
+						<div className="shrink-0 space-y-2" style={{ width: wrapperWidth }}>
+							<div className="grid gap-x-[6px]" style={layoutGridStyle}>
+								<div aria-hidden="true" />
 								<div
-									key={count}
-									className={`h-[10px] w-[10px] rounded-[2px] ${getContributionClassName(count)}`}
-									aria-hidden="true"
-								/>
-							))}
-							<span>More</span>
+									className="relative mb-1 h-4 text-[10px] leading-4 text-muted-foreground"
+									style={{ width: graphWidth }}
+								>
+									{monthLabels.map((month) => (
+										<span
+											key={`${month.label}-${month.weekIndex}`}
+											className="absolute top-0"
+											style={{
+												left: month.weekIndex * (CELL_SIZE + CELL_GAP),
+											}}
+										>
+											{month.label}
+										</span>
+									))}
+								</div>
+
+								<div
+									className="grid text-[10px] leading-none text-muted-foreground"
+									style={weekGridStyle}
+								>
+									{WEEKDAY_LABELS.map((weekday) => (
+										<span
+											key={weekday.label}
+											className="flex items-center"
+											style={{ gridRowStart: weekday.row }}
+										>
+											{weekday.label}
+										</span>
+									))}
+								</div>
+
+								<div className="grid" style={graphGridStyle}>
+									{weeks.map((week, weekIndex) => (
+										<div key={weekIndex} className="grid" style={weekGridStyle}>
+											{week.map((day) => {
+												const postLabel = day.count === 1 ? "post" : "posts";
+												const label = `${day.count} ${postLabel} on ${formatDate(day.date)}`;
+
+												return (
+													<div
+														key={day.date}
+														aria-hidden={!day.isInRange}
+														aria-label={day.isInRange ? label : undefined}
+														className={`h-[10px] w-[10px] rounded-[2px] ${
+															day.isInRange
+																? getContributionClassName(day.count)
+																: "bg-transparent"
+														}`}
+														title={day.isInRange ? label : undefined}
+													/>
+												);
+											})}
+										</div>
+									))}
+								</div>
+							</div>
+
+							<div className="flex items-center justify-end gap-1 text-[11px] text-muted-foreground">
+								<span>Less</span>
+								{[0, 1, 2, 3, 4].map((count) => (
+									<div
+										key={count}
+										className={`h-[10px] w-[10px] rounded-[2px] ${getContributionClassName(count)}`}
+										aria-hidden="true"
+									/>
+								))}
+								<span>More</span>
+							</div>
 						</div>
+						<div
+							aria-hidden="true"
+							className="shrink-0"
+							style={{ width: TRAILING_SCROLL_PADDING }}
+						/>
 					</div>
 				</div>
 			</Card>
