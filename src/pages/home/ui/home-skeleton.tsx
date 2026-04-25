@@ -51,8 +51,9 @@ export const HomeSkeleton = () => {
                             <Skeleton className="h-3 w-36" />
                         </div>
                         <div className="overflow-x-auto overflow-y-hidden pb-1">
-                            <div className="w-[717px] space-y-2 pr-3">
-                                <div className="grid grid-cols-[28px_683px] gap-x-[6px]">
+                            <div className="flex w-max">
+                                <div className="w-[717px] shrink-0 space-y-2">
+                                    <div className="grid grid-cols-[28px_683px] gap-x-[6px]">
                                     <div aria-hidden="true" />
                                     <div className="mb-1 h-4 grid grid-cols-12 gap-4">
                                         {Array.from({ length: 12 }).map((_, i) => (
@@ -84,6 +85,8 @@ export const HomeSkeleton = () => {
                                     ))}
                                     <Skeleton className="h-3 w-6" />
                                 </div>
+                                </div>
+                                <div className="w-3 shrink-0" aria-hidden="true" />
                             </div>
                         </div>
                     </div>
