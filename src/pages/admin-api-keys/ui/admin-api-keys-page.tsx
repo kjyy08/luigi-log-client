@@ -153,7 +153,7 @@ const CreateApiKeyDialog = ({
 			const createdApiKey = await createApiKeyMutation.mutateAsync({
 				name: name.trim(),
 				scopes,
-				expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
+				expiresAt: expiresAt ? `${expiresAt}:00` : null,
 			});
 
 			resetForm();
