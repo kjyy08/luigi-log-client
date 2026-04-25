@@ -211,7 +211,7 @@ export const PostContributionGraph = () => {
 			</div>
 			<Card className="overflow-hidden border-border bg-background p-3 sm:p-4">
 				<div className="overflow-x-auto overflow-y-hidden pb-1">
-					<div className="space-y-2" style={{ width: wrapperWidth }}>
+					<div className="space-y-2 pr-3" style={{ width: wrapperWidth }}>
 						<div className="grid gap-x-[6px]" style={layoutGridStyle}>
 							<div aria-hidden="true" />
 							<div

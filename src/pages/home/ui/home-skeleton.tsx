@@ -51,7 +51,7 @@ export const HomeSkeleton = () => {
                             <Skeleton className="h-3 w-36" />
                         </div>
                         <div className="overflow-x-auto overflow-y-hidden pb-1">
-                            <div className="w-[717px] space-y-2">
+                            <div className="w-[717px] space-y-2 pr-3">
                                 <div className="grid grid-cols-[28px_683px] gap-x-[6px]">
                                     <div aria-hidden="true" />
                                     <div className="mb-1 h-4 grid grid-cols-12 gap-4">
