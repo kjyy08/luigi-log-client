@@ -338,7 +338,7 @@ const RevokeDialog = ({
 	);
 };
 
-export const AdminApiKeysPage = () => {
+export const AdminApiKeysPanel = () => {
 	const credentials = useAuthStore((state) => state.credentials);
 	const isAdmin = credentials?.role === "ADMIN";
 	const { data, isError, isLoading, isFetching, refetch } = useQuery({
@@ -351,27 +351,27 @@ export const AdminApiKeysPage = () => {
 
 	if (!isAdmin) {
 		return (
-			<main className="container mx-auto flex min-h-[50vh] max-w-3xl flex-col items-center justify-center gap-4 px-4 py-12 text-center">
+			<div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 rounded-xl border bg-card px-4 py-12 text-center">
 				<ShieldAlert className="h-12 w-12 text-muted-foreground" />
 				<div className="space-y-2">
 					<h1 className="text-2xl font-bold">Admin access required</h1>
 					<p className="text-muted-foreground">Sign in with an admin account to manage API keys.</p>
 				</div>
-			</main>
+			</div>
 		);
 	}
 
 	const apiKeys = data?.apiKeys ?? [];
 
 	return (
-		<main className="container mx-auto max-w-5xl px-4 py-8 sm:py-12">
-			<div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+		<section className="space-y-8" aria-labelledby="api-keys-heading">
+			<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 				<div className="space-y-2">
 					<div className="flex items-center gap-2 text-sm font-medium text-luigi-green">
 						<KeyRound className="h-4 w-4" />
 						Admin
 					</div>
-					<h1 className="text-3xl font-bold tracking-tight">API keys</h1>
+					<h2 id="api-keys-heading" className="text-3xl font-bold tracking-tight">API keys</h2>
 					<p className="max-w-2xl text-muted-foreground">
 						Create and revoke scoped API keys for trusted automation. Secrets are displayed only at creation time.
 					</p>
@@ -430,6 +430,14 @@ export const AdminApiKeysPage = () => {
 			<CreateApiKeyDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} onCreated={setCreatedApiKey} />
 			<SecretDialog apiKey={createdApiKey} onClose={() => setCreatedApiKey(null)} />
 			<RevokeDialog apiKey={apiKeyToRevoke} onClose={() => setApiKeyToRevoke(null)} />
+		</section>
+	);
+};
+
+export const AdminApiKeysPage = () => {
+	return (
+		<main className="container mx-auto max-w-5xl px-4 py-8 sm:py-12">
+			<AdminApiKeysPanel />
 		</main>
 	);
 };
