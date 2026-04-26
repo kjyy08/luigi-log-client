@@ -4,7 +4,7 @@ import { MarkdownPreview } from "./markdown-preview";
 
 export const EditorLayout = () => {
     return (
-        <div className="flex flex-col h-screen overflow-hidden animate-fade-in">
+        <div className="flex flex-col h-screen overflow-hidden">
             <EditorToolbar />
             <div className="flex flex-1 overflow-hidden">
                 <MarkdownEditor />

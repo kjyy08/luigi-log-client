@@ -2,7 +2,7 @@ import { Skeleton } from "@/shared/ui/skeleton";
 
 export const ProfileSkeleton = () => {
     return (
-        <div className="container max-w-2xl py-10 animate-fade-in">
+        <div className="container max-w-2xl py-10">
             <Skeleton className="h-9 w-20 mb-8" />
 
             <div className="bg-card border rounded-xl p-6 shadow-sm space-y-8">

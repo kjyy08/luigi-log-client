@@ -29,7 +29,7 @@ export const BlogListPage = () => {
 	};
 
 	return (
-		<div className="mx-auto w-full max-w-7xl animate-fade-in px-0 py-4 sm:px-2 md:py-8">
+		<div className="mx-auto w-full max-w-7xl px-0 py-4 sm:px-2 md:py-8">
 			<div className="mb-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
 				<PageHeader
 					title="Posts"
