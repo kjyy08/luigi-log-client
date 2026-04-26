@@ -11,6 +11,7 @@ import {
 } from "@/entities/post/model/post.mutations";
 import { useToast } from "@/shared/hooks/use-toast";
 import { generateSlug } from "@/shared/lib/utils";
+import { getImageUploadPublishBlockMessage } from "./image-upload-utils";
 import { useEditorStore } from "./editor.store";
 
 const getRedirectPath = (type: PostType) => {
@@ -29,13 +30,23 @@ export const useEditorActions = () => {
 	const isPublishing = isCreating || isUpdating;
 
 	const publishPost = async () => {
-		const { title, body, slug, tags, type, postId, reset } =
+		const { title, body, slug, tags, type, postId, reset, imageUploads } =
 			useEditorStore.getState();
 
 		if (!title || !body) {
 			toast({
 				title: "Missing input",
 				description: "Please enter both title and content.",
+				variant: "destructive",
+			});
+			return false;
+		}
+
+		const imageUploadBlockMessage = getImageUploadPublishBlockMessage(imageUploads, body);
+		if (imageUploadBlockMessage) {
+			toast({
+				title: "Images not ready",
+				description: imageUploadBlockMessage,
 				variant: "destructive",
 			});
 			return false;

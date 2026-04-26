@@ -14,6 +14,10 @@ interface MarkdownEditorProps {
     className?: string; // Container className
     editorClassName?: string; // Textarea className
     resizable?: boolean;
+    textareaRef?: React.Ref<HTMLTextAreaElement>;
+    onPaste?: React.ClipboardEventHandler<HTMLTextAreaElement>;
+    onDrop?: React.DragEventHandler<HTMLTextAreaElement>;
+    onDragOver?: React.DragEventHandler<HTMLTextAreaElement>;
 }
 
 export const MarkdownEditor = ({
@@ -25,7 +29,11 @@ export const MarkdownEditor = ({
     footer,
     className,
     editorClassName,
-    resizable = false
+    resizable = false,
+    textareaRef,
+    onPaste,
+    onDrop,
+    onDragOver
 }: MarkdownEditorProps) => {
     return (
         <div className={cn("bg-background rounded-lg border shadow-sm overflow-hidden flex flex-col", className)}>
@@ -49,6 +57,7 @@ export const MarkdownEditor = ({
 
                 <TabsContent value="write" className="flex-1 p-4 mt-0">
                     <TextareaAutosize
+                        ref={textareaRef}
                         placeholder={placeholder}
                         className={cn(
                             "w-full h-full text-base leading-relaxed placeholder:text-muted-foreground/50 outline-none bg-transparent min-h-[100px]",
@@ -59,6 +68,9 @@ export const MarkdownEditor = ({
                         onChange={(e) => onChange(e.target.value)}
                         minRows={minRows}
                         disabled={disabled}
+                        onPaste={onPaste}
+                        onDrop={onDrop}
+                        onDragOver={onDragOver}
                     />
 
                 </TabsContent>
