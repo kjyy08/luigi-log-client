@@ -54,8 +54,8 @@ export function TabsTrigger({ className, value, ...props }: TabsTriggerProps) {
             onClick={() => context.onValueChange(value)}
             data-state={isActive ? "active" : "inactive"}
             className={cn(
-                "inline-flex items-center justify-center whitespace-nowrap px-4 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-                "border-b-2 border-transparent data-[state=active]:border-luigi-gold data-[state=active]:font-semibold data-[state=active]:text-foreground text-muted-foreground hover:text-foreground",
+                "inline-flex items-center justify-center whitespace-nowrap rounded-t-md px-4 py-2 text-sm font-medium ring-offset-background transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.985] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100",
+                "border-b-2 border-transparent text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground data-[state=active]:border-luigi-gold data-[state=active]:bg-foreground/[0.04] data-[state=active]:font-semibold data-[state=active]:text-foreground data-[state=active]:shadow-[inset_0_-1px_0_rgba(234,179,8,0.25)]",
                 className
             )}
             {...props}

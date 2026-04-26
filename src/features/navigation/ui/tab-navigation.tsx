@@ -40,17 +40,17 @@ export const TabNavigation = ({ className }: { className?: string }) => {
         <div className={cn("w-full border-b bg-muted/30 pt-4", className)}>
             <div className="container">
                 <Tabs defaultValue="overview" value={getTabValue()} onValueChange={handleValueChange} className="w-full">
-                    <TabsList className="h-auto w-full justify-start gap-2 bg-transparent p-0 overflow-x-auto">
-                        <TabsTrigger value="overview" className="gap-2">
+                    <TabsList className="h-auto w-full justify-start gap-1 bg-transparent p-0 overflow-x-auto [-webkit-overflow-scrolling:touch]">
+                        <TabsTrigger value="overview" className="gap-2 shrink-0">
                             Overview
                         </TabsTrigger>
-                        <TabsTrigger value="posts" className="gap-2">
+                        <TabsTrigger value="posts" className="gap-2 shrink-0">
                             Posts
                         </TabsTrigger>
-                        <TabsTrigger value="portfolio" className="gap-2">
+                        <TabsTrigger value="portfolio" className="gap-2 shrink-0">
                             Portfolio
                         </TabsTrigger>
-                        <TabsTrigger value="guestbook" className="gap-2">
+                        <TabsTrigger value="guestbook" className="gap-2 shrink-0">
                             Guestbook
                         </TabsTrigger>
                     </TabsList>

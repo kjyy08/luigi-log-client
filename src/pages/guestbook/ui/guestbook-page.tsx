@@ -6,6 +6,7 @@ import { GuestbookInput } from "@/features/guestbook";
 import React from "react";
 import { GuestbookSkeleton } from "./guestbook-skeleton";
 import { guestbookQueries } from "@/entities/guestbook/model/guestbook.queries";
+import { ContentReveal } from "@/shared/ui/content-reveal";
 
 const GuestbookList = () => {
     const { data: entries } = useSuspenseQuery(guestbookQueries.list());
@@ -27,11 +28,13 @@ const GuestbookList = () => {
 
 export const GuestbookPage = () => {
     return (
-        <div className="container max-w-4xl mx-auto py-10">
-            <PageHeader
-                title="Guestbook"
-                description="Feel free to leave a message."
-            />
+        <ContentReveal className="container max-w-4xl mx-auto py-10">
+            <div>
+                <PageHeader
+                    title="Guestbook"
+                    description="Feel free to leave a message."
+                />
+            </div>
 
             <div className="mt-8">
                 <GuestbookInput />
@@ -45,6 +48,6 @@ export const GuestbookPage = () => {
                     <GuestbookList />
                 </React.Suspense>
             </div>
-        </div>
+        </ContentReveal>
     );
 };

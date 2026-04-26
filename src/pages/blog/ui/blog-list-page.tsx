@@ -7,6 +7,7 @@ import { useIsOwner } from "@/shared/hooks/use-is-owner";
 import { Button } from "@/shared/ui/button";
 import { PostListSkeleton } from "@/features/post-list/ui/post-list-skeleton";
 import { FilterBar } from "./components/filter-bar";
+import { ContentReveal } from "@/shared/ui/content-reveal";
 
 export const BlogListPage = () => {
 	const isOwner = useIsOwner();
@@ -29,7 +30,7 @@ export const BlogListPage = () => {
 	};
 
 	return (
-		<div className="mx-auto w-full max-w-7xl px-0 py-4 sm:px-2 md:py-8">
+		<ContentReveal className="mx-auto w-full max-w-7xl px-0 py-4 sm:px-2 md:py-8">
 			<div className="mb-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
 				<PageHeader
 					title="Posts"
@@ -51,6 +52,6 @@ export const BlogListPage = () => {
 			<React.Suspense fallback={<PostListSkeleton viewMode="list" count={5} />}>
 				<PostList fixedType="BLOG" showTabs={false} viewMode="list" searchQuery={searchQuery} />
 			</React.Suspense>
-		</div>
+		</ContentReveal>
 	);
 };

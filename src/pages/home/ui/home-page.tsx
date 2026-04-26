@@ -8,6 +8,7 @@ import { ProfileReadme } from "./components/profile-readme";
 import { RecentGuestbook } from "./components/recent-guestbook";
 import { BLOG_OWNER_USERNAME } from "@/shared/config";
 import { useAuthStore } from "@/entities/auth/model/auth.store";
+import { ContentReveal } from "@/shared/ui/content-reveal";
 
 export const HomePage = () => {
     const { data: profile } = useGetProfile(BLOG_OWNER_USERNAME);
@@ -18,7 +19,7 @@ export const HomePage = () => {
 
     return (
         <Suspense fallback={<HomeSkeleton />}>
-            <div className="container mx-auto py-8 px-4 md:px-6 max-w-7xl">
+            <ContentReveal className="container mx-auto py-8 px-4 md:px-6 max-w-7xl">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                     {/* Left Sidebar (Profile) - 30%ish */}
                     <div className="md:col-span-4 lg:col-span-3">
@@ -46,7 +47,7 @@ export const HomePage = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </ContentReveal>
         </Suspense>
     );
 };
