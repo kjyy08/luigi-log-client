@@ -4,7 +4,6 @@ import { PageHeader } from "@/shared/ui/page-header";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { GuestbookInput } from "@/features/guestbook";
 import React from "react";
-import { GuestbookSkeleton } from "./guestbook-skeleton";
 import { guestbookQueries } from "@/entities/guestbook/model/guestbook.queries";
 import { ContentReveal } from "@/shared/ui/content-reveal";
 
@@ -44,7 +43,7 @@ export const GuestbookPage = () => {
                     {/* <span className="font-semibold text-sm">Guestbooks</span> */}
                 </div>
 
-                <React.Suspense fallback={<GuestbookSkeleton />}>
+                <React.Suspense fallback={null}>
                     <GuestbookList />
                 </React.Suspense>
             </div>

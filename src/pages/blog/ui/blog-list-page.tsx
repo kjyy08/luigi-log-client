@@ -5,7 +5,6 @@ import { PageHeader } from "@/shared/ui/page-header";
 import { PostList } from "@/features/post-list";
 import { useIsOwner } from "@/shared/hooks/use-is-owner";
 import { Button } from "@/shared/ui/button";
-import { PostListSkeleton } from "@/features/post-list/ui/post-list-skeleton";
 import { FilterBar } from "./components/filter-bar";
 import { ContentReveal } from "@/shared/ui/content-reveal";
 
@@ -49,7 +48,7 @@ export const BlogListPage = () => {
 
 			<FilterBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
 
-			<React.Suspense fallback={<PostListSkeleton viewMode="list" count={5} />}>
+			<React.Suspense fallback={null}>
 				<PostList fixedType="BLOG" showTabs={false} viewMode="list" searchQuery={searchQuery} />
 			</React.Suspense>
 		</ContentReveal>

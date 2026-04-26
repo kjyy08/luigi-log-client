@@ -5,7 +5,6 @@ import { getPostList } from "@/entities/post/api/post.api";
 import { useAuthStore } from "@/entities/auth/model/auth.store";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/utils";
-import { PostListSkeleton } from "./post-list-skeleton";
 
 interface PostListProps {
 	fixedType?: PostType;
@@ -104,7 +103,7 @@ export const PostList = ({ fixedType, showTabs = true, viewMode = "grid", search
 			)}
 
 			{isLoading ? (
-				<PostListSkeleton viewMode={viewMode} count={5} />
+				null
 			) : isError ? (
 				<div className="rounded-lg border border-dashed border-border p-8 text-center">
 					<p className="text-sm font-medium text-foreground">Failed to load posts.</p>

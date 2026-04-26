@@ -18,7 +18,7 @@ export const HomePage = () => {
     if (!profile) return <HomeSkeleton />;
 
     return (
-        <Suspense fallback={<HomeSkeleton />}>
+        <Suspense fallback={null}>
             <ContentReveal className="container mx-auto py-8 px-4 md:px-6 max-w-7xl">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                     {/* Left Sidebar (Profile) - 30%ish */}
