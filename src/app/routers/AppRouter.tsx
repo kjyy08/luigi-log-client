@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { BaseLayout } from "@/app/layouts/base-layout";
 import { Toaster } from "@/shared/ui/toaster";
 
@@ -8,7 +8,6 @@ const BlogListPage = lazy(() => import("@/pages/blog").then((module) => ({ defau
 const PortfolioListPage = lazy(() => import("@/pages/portfolio").then((module) => ({ default: module.PortfolioListPage })));
 const PostWritePage = lazy(() => import("@/pages/post-write").then((module) => ({ default: module.PostWritePage })));
 const OAuthCallbackPage = lazy(() => import("@/pages/auth").then((module) => ({ default: module.OAuthCallbackPage })));
-const AdminApiKeysPage = lazy(() => import("@/pages/admin-api-keys").then((module) => ({ default: module.AdminApiKeysPage })));
 const SettingsPage = lazy(() => import("@/pages/settings").then((module) => ({ default: module.SettingsPage })));
 const PostDetailPage = lazy(() => import("@/pages/post-detail/ui/post-detail-page").then((module) => ({ default: module.PostDetailPage })));
 const GuestbookPage = lazy(() => import("@/pages/guestbook").then((module) => ({ default: module.GuestbookPage })));
@@ -39,7 +38,8 @@ export const AppRouter = () => {
                         <Route path="/portfolio" element={<PortfolioListPage />} />
                         <Route path="/guestbook" element={<GuestbookPage />} />
                         <Route path="/settings" element={<SettingsPage />} />
-                        <Route path="/admin/api-keys" element={<AdminApiKeysPage />} />
+                        <Route path="/settings/api-keys" element={<SettingsPage />} />
+                        <Route path="/admin/api-keys" element={<Navigate to="/settings/api-keys" replace />} />
                         <Route path="/posts/:username/:slug" element={<PostDetailPage />} />
 
                         <Route path="/write" element={<PostWritePage />} />
