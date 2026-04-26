@@ -5,7 +5,6 @@ import { Pencil } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { postQueries } from "@/entities/post";
 import { ProjectCard } from "@/entities/project/ui/project-card";
-import { PostListSkeleton } from "@/features/post-list/ui/post-list-skeleton";
 import React from "react";
 import { PageHeader } from "@/shared/ui/page-header";
 import { ContentReveal } from "@/shared/ui/content-reveal";
@@ -59,14 +58,7 @@ export const PortfolioListPage = () => {
                 </PageHeader>
             </div>
 
-            <React.Suspense fallback={
-                <PostListSkeleton
-                    count={4}
-                    viewMode="grid"
-                    variant="project"
-                    className="grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
-                />
-            }>
+            <React.Suspense fallback={null}>
                 <PortfolioProjectList />
             </React.Suspense>
         </ContentReveal>
