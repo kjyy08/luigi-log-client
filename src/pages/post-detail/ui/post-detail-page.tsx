@@ -58,7 +58,7 @@ export const PostDetailPage = () => {
 	// const isOwner = useIsOwner();
 
 	return (
-		<article className="mx-auto w-full max-w-7xl animate-fade-in px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
+		<article className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
 			<IssueHeader
 				title={post.title}
 				postId={post.postId}

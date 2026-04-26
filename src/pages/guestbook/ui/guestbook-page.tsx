@@ -27,7 +27,7 @@ const GuestbookList = () => {
 
 export const GuestbookPage = () => {
     return (
-        <div className="container max-w-4xl mx-auto py-10 animate-fade-in">
+        <div className="container max-w-4xl mx-auto py-10">
             <PageHeader
                 title="Guestbook"
                 description="Feel free to leave a message."

@@ -41,7 +41,7 @@ export const PortfolioListPage = () => {
     const isOwner = useIsOwner();
 
     return (
-        <div className="container max-w-5xl mx-auto py-10 animate-fade-in">
+        <div className="container max-w-5xl mx-auto py-10">
             <PageHeader
                 title="Portfolio"
                 description="A collection of my projects and work."

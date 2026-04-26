@@ -9,7 +9,7 @@ export const PostListPage = () => {
     const { isAuthenticated } = useAuthStore();
 
     return (
-        <div className="py-10 animate-fade-in">
+        <div className="py-10">
             <PageHeader
                 title="Posts"
                 description="A collection of posts on various topics."
