@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useToast } from "@/shared/hooks/use-toast";
 import { PublishModal } from "./publish-modal";
 import { useEditorStore } from "../model/editor.store";
+import { getImageUploadPublishBlockMessage } from "../model/image-upload-utils";
 import { useEditorActions } from "../model/use-editor-actions";
 
 export const EditorToolbar = () => {
     const { toast } = useToast();
-    const { title, body, postId } = useEditorStore();
+    const { title, body, postId, imageUploads } = useEditorStore();
     const { publishPost, deleteCurrentPost, tempSave, goBack, isPublishing, isDeleting } = useEditorActions();
 
     const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
@@ -18,6 +19,15 @@ export const EditorToolbar = () => {
             toast({
                 title: "Missing input",
                 description: "Please enter both title and content.",
+                variant: "destructive",
+            });
+            return;
+        }
+        const imageUploadBlockMessage = getImageUploadPublishBlockMessage(imageUploads, body);
+        if (imageUploadBlockMessage) {
+            toast({
+                title: "Images not ready",
+                description: imageUploadBlockMessage,
                 variant: "destructive",
             });
             return;

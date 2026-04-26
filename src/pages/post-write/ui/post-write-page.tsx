@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { postQueries } from "@/entities/post/model/post.queries";
+import { getImageUploadPublishBlockMessage } from "@/features/post-editor/model/image-upload-utils";
 import { useEditorStore } from "@/features/post-editor/model/editor.store";
 import { useEditorActions } from "@/features/post-editor/model/use-editor-actions";
 import { IssueEditor } from "@/features/post-editor/ui/issue-editor";
@@ -21,9 +22,12 @@ export const PostWritePage = () => {
 		setDescription,
 		setPostId,
 		reset,
+		body,
+		imageUploads,
 	} = useEditorStore();
 
 	const { publishPost, isPublishing } = useEditorActions();
+	const imageUploadBlockMessage = getImageUploadPublishBlockMessage(imageUploads, body);
 
 	// Fetch data if editing
 	const { data: post, isLoading } = useQuery({
@@ -84,11 +88,14 @@ export const PostWritePage = () => {
 				<div className="flex-1 w-full space-y-4">
 					<IssueEditor />
 
-					<div className="flex justify-end gap-2 px-4 lg:px-8">
+					<div className="flex flex-col items-end gap-2 px-4 lg:px-8">
+						{imageUploadBlockMessage && (
+							<p className="text-sm text-destructive">{imageUploadBlockMessage}</p>
+						)}
 						<Button
 							variant="default"
 							onClick={publishPost}
-							disabled={isPublishing}
+							disabled={isPublishing || !!imageUploadBlockMessage}
 							className="bg-luigi-green hover:bg-luigi-green/90 text-white font-bold"
 						>
 							{isPublishing && (

@@ -1,6 +1,6 @@
 export interface FileResponse {
     fileId: string;
-    originalName: string;
+    originalFileName: string;
     mimeType: string;
     fileSize: number;
     publicUrl: string;
