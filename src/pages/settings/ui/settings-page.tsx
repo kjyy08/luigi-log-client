@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link, Navigate, useLocation } from "react-router-dom";
 import { KeyRound, Settings, ShieldAlert, Trash2, User } from "lucide-react";
 import { AdminApiKeysPanel } from "@/pages/admin-api-keys";
 import { useAuthStore } from "@/entities/auth";
@@ -87,9 +86,9 @@ const settingsNavItemClassName = (isActive: boolean) =>
 
 export const SettingsPage = () => {
     const { isAuthenticated, credentials } = useAuthStore();
-    const { pathname } = useLocation();
+    const [activeSection, setActiveSection] = useState<"account" | "api-keys">("account");
     const isAdmin = credentials?.role === "ADMIN";
-    const isApiKeysActive = isAdmin && pathname === "/settings/api-keys";
+    const isApiKeysActive = isAdmin && activeSection === "api-keys";
 
     if (!isAuthenticated) {
         return (
@@ -101,10 +100,6 @@ export const SettingsPage = () => {
                 </div>
             </main>
         );
-    }
-
-    if (pathname === "/settings/api-keys" && !isAdmin) {
-        return <Navigate to="/settings" replace />;
     }
 
     return (
@@ -121,19 +116,25 @@ export const SettingsPage = () => {
             <div className="grid gap-8 md:grid-cols-[220px_minmax(0,1fr)]">
                 <aside aria-label="Settings navigation" className="md:border-r md:pr-6">
                     <nav className="flex gap-2 overflow-x-auto pb-2 md:flex-col md:overflow-visible md:pb-0">
-                        <Link to="/settings" className={settingsNavItemClassName(!isApiKeysActive)} aria-current={!isApiKeysActive ? "page" : undefined}>
+                        <button
+                            type="button"
+                            className={settingsNavItemClassName(!isApiKeysActive)}
+                            aria-current={!isApiKeysActive ? "page" : undefined}
+                            onClick={() => setActiveSection("account")}
+                        >
                             <User className="h-4 w-4 shrink-0" />
                             Account
-                        </Link>
+                        </button>
                         {isAdmin ? (
-                            <Link
-                                to="/settings/api-keys"
+                            <button
+                                type="button"
                                 className={settingsNavItemClassName(isApiKeysActive)}
                                 aria-current={isApiKeysActive ? "page" : undefined}
+                                onClick={() => setActiveSection("api-keys")}
                             >
                                 <KeyRound className="h-4 w-4 shrink-0" />
                                 API keys
-                            </Link>
+                            </button>
                         ) : null}
                     </nav>
                 </aside>
