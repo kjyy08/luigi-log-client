@@ -14,7 +14,16 @@ const PostDetailPage = lazy(() => import("@/pages/post-detail/ui/post-detail-pag
 const GuestbookPage = lazy(() => import("@/pages/guestbook").then((module) => ({ default: module.GuestbookPage })));
 
 const PageFallback = () => (
-    <div className="flex min-h-[50vh] items-center justify-center text-muted-foreground">Loading...</div>
+    <div className="min-h-[50vh] px-6 py-10" aria-busy="true" aria-label="Loading page" role="status">
+        <div className="mx-auto w-full max-w-3xl space-y-4" aria-hidden="true">
+            <div className="h-6 w-1/3 animate-pulse rounded-md bg-muted" />
+            <div className="space-y-3">
+                <div className="h-4 w-full animate-pulse rounded-md bg-muted" />
+                <div className="h-4 w-5/6 animate-pulse rounded-md bg-muted" />
+                <div className="h-4 w-2/3 animate-pulse rounded-md bg-muted" />
+            </div>
+        </div>
+    </div>
 );
 
 export const AppRouter = () => {
