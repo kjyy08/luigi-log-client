@@ -21,7 +21,7 @@ export const LoginModal = () => {
                     <div className="absolute inset-0 bg-grid-slate-200/60 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
 
                     <DialogHeader className="mb-4">
-                        <DialogTitle className="sr-only">Sign in to LuigiHub</DialogTitle>
+                        <DialogTitle className="sr-only">Sign in to Luigi Log</DialogTitle>
                         <div className="flex flex-col items-center">
                             <div className="bg-luigi-green p-3 rounded-full shadow-lg mb-4 text-white">
                                 <svg
@@ -39,7 +39,7 @@ export const LoginModal = () => {
                                 </svg>
                             </div>
                             <h2 className="text-center text-2xl font-normal tracking-tight text-foreground">
-                                Sign in to LuigiHub
+                                Sign in to Luigi Log
                             </h2>
                         </div>
                     </DialogHeader>
@@ -68,7 +68,7 @@ export const LoginModal = () => {
 
                         <div className="text-center text-sm text-muted-foreground">
                             <p>
-                                New to LuigiHub? Just sign in to create an account.
+                                New to Luigi Log? Just sign in to create an account.
                             </p>
                         </div>
 
