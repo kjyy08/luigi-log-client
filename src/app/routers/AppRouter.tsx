@@ -12,23 +12,10 @@ const SettingsPage = lazy(() => import("@/pages/settings").then((module) => ({ d
 const PostDetailPage = lazy(() => import("@/pages/post-detail/ui/post-detail-page").then((module) => ({ default: module.PostDetailPage })));
 const GuestbookPage = lazy(() => import("@/pages/guestbook").then((module) => ({ default: module.GuestbookPage })));
 
-const PageFallback = () => (
-    <div className="min-h-[50vh] px-6 py-10" aria-busy="true" aria-label="Loading page" role="status">
-        <div className="mx-auto w-full max-w-3xl space-y-4" aria-hidden="true">
-            <div className="h-6 w-1/3 animate-pulse rounded-md bg-muted" />
-            <div className="space-y-3">
-                <div className="h-4 w-full animate-pulse rounded-md bg-muted" />
-                <div className="h-4 w-5/6 animate-pulse rounded-md bg-muted" />
-                <div className="h-4 w-2/3 animate-pulse rounded-md bg-muted" />
-            </div>
-        </div>
-    </div>
-);
-
 export const AppRouter = () => {
     return (
         <BrowserRouter>
-            <Suspense fallback={<PageFallback />}>
+            <Suspense fallback={null}>
                 <Routes>
                     <Route element={<BaseLayout />}>
                         <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
@@ -38,8 +25,7 @@ export const AppRouter = () => {
                         <Route path="/portfolio" element={<PortfolioListPage />} />
                         <Route path="/guestbook" element={<GuestbookPage />} />
                         <Route path="/settings" element={<SettingsPage />} />
-                        <Route path="/settings/api-keys" element={<SettingsPage />} />
-                        <Route path="/admin/api-keys" element={<Navigate to="/settings/api-keys" replace />} />
+                        <Route path="/admin/api-keys" element={<Navigate to="/settings" replace />} />
                         <Route path="/posts/:username/:slug" element={<PostDetailPage />} />
 
                         <Route path="/write" element={<PostWritePage />} />
