@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/entities/auth";
 import { Button } from "@/shared/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
+import { Link } from "react-router-dom";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,14 +10,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
-import { LogOut, UserX } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
 import { useAuthActions } from "../model/use-auth-actions";
 import { useGetMyProfile } from "@/entities/profile/model/profile.queries";
 import { useUIStore } from "@/shared/store/use-ui-store";
 
 export const LoginButton = () => {
     const { isAuthenticated, member, profile: storeProfile } = useAuthStore();
-    const { handleLogout, handleDeleteAccount } = useAuthActions();
+    const { handleLogout } = useAuthActions();
 
     const { data: profileQueryData } = useGetMyProfile(member?.username, { enabled: isAuthenticated && !!member?.username });
     const profile = profileQueryData || storeProfile;
@@ -53,17 +54,16 @@ export const LoginButton = () => {
                         </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                        onClick={handleDeleteAccount}
-                        className="cursor-pointer text-destructive focus:text-destructive"
-                    >
-                        <UserX className="mr-2 h-4 w-4" />
-                        <span>Delete account</span>
+                    <DropdownMenuItem asChild className="cursor-pointer">
+                        <Link to="/settings">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Settings</span>
+                        </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={handleLogout}
-                        className="cursor-pointer text-destructive focus:text-destructive"
+                        className="cursor-pointer"
                     >
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Log out</span>

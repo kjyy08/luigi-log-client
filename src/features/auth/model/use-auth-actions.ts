@@ -20,13 +20,7 @@ export const useAuthActions = () => {
         }
     };
 
-    const handleDeleteAccount = async () => {
-        const confirmed = window.confirm(
-            "Are you sure you want to delete your account? This action cannot be undone and all data will be lost."
-        );
-
-        if (!confirmed) return;
-
+    const deleteAccount = async () => {
         try {
             await deleteMember();
             logoutAction(); // Clear store
@@ -40,6 +34,6 @@ export const useAuthActions = () => {
     return {
         handleLogin,
         handleLogout,
-        handleDeleteAccount,
+        deleteAccount,
     };
 };

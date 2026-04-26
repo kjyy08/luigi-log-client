@@ -1,4 +1,4 @@
-export const API_KEY_API_BASE = "/api/v1/api-keys";
+export const API_KEY_API_BASE = "/api/v1/keys";
 
 export const apiKeyEndPoint = {
 	list: () => API_KEY_API_BASE,
