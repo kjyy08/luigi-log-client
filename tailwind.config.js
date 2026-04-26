@@ -97,7 +97,7 @@ export default {
             keyframes: {
                 "fade-in-up": {
                     "0%": {
-                        opacity: "0",
+                        opacity: "0.98",
                         transform: "translateY(20px)",
                     },
                     "100%": {
@@ -105,9 +105,20 @@ export default {
                         transform: "translateY(0)",
                     },
                 },
+                "content-reveal": {
+                    from: {
+                        opacity: "0.98",
+                        transform: "translateY(4px)",
+                    },
+                    to: {
+                        opacity: "1",
+                        transform: "translateY(0)",
+                    },
+                },
             },
             animation: {
                 "fade-in-up": "fade-in-up 0.5s ease-out forwards",
+                "content-reveal": "content-reveal 150ms cubic-bezier(0.25,0.46,0.45,0.94) both",
             },
         },
     },

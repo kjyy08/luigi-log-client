@@ -8,6 +8,7 @@ import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
+import { ContentReveal } from "@/shared/ui/content-reveal";
 
 const AccountSettingsPanel = () => {
     const { member } = useAuthStore();
@@ -79,9 +80,10 @@ const AccountSettingsPanel = () => {
 
 const settingsNavItemClassName = (isActive: boolean) =>
     cn(
-        "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-        "hover:bg-accent hover:text-accent-foreground",
-        isActive ? "bg-accent text-accent-foreground" : "text-muted-foreground",
+        "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-[color,background-color,box-shadow,transform] duration-150 ease-out",
+        "hover:bg-accent hover:text-accent-foreground active:scale-[0.985] motion-reduce:transition-none motion-reduce:active:scale-100",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-luigi-gold/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        isActive ? "bg-accent text-accent-foreground shadow-[inset_2px_0_0_#FBD000]" : "text-muted-foreground",
     );
 
 export const SettingsPage = () => {
@@ -92,18 +94,18 @@ export const SettingsPage = () => {
 
     if (!isAuthenticated) {
         return (
-            <main className="container mx-auto flex min-h-[50vh] max-w-3xl flex-col items-center justify-center gap-4 px-4 py-12 text-center">
+            <ContentReveal className="container mx-auto flex min-h-[50vh] max-w-3xl flex-col items-center justify-center gap-4 px-4 py-12 text-center">
                 <ShieldAlert className="h-12 w-12 text-muted-foreground" />
                 <div className="space-y-2">
                     <h1 className="text-2xl font-bold">Sign in required</h1>
                     <p className="text-muted-foreground">Sign in to manage your account settings.</p>
                 </div>
-            </main>
+            </ContentReveal>
         );
     }
 
     return (
-        <main className="container mx-auto max-w-6xl px-4 py-8 sm:py-12">
+        <ContentReveal className="container mx-auto max-w-6xl px-4 py-8 sm:py-12">
             <div className="mb-8 space-y-2">
                 <div className="flex items-center gap-2 text-sm font-medium text-luigi-green">
                     <Settings className="h-4 w-4" />
@@ -141,6 +143,6 @@ export const SettingsPage = () => {
 
                 <div className="min-w-0">{isApiKeysActive ? <AdminApiKeysPanel /> : <AccountSettingsPanel />}</div>
             </div>
-        </main>
+        </ContentReveal>
     );
 };

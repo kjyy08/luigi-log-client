@@ -8,6 +8,7 @@ import { ProjectCard } from "@/entities/project/ui/project-card";
 import { PostListSkeleton } from "@/features/post-list/ui/post-list-skeleton";
 import React from "react";
 import { PageHeader } from "@/shared/ui/page-header";
+import { ContentReveal } from "@/shared/ui/content-reveal";
 
 const PortfolioProjectList = () => {
     const { data } = useSuspenseQuery(postQueries.list({
@@ -41,20 +42,22 @@ export const PortfolioListPage = () => {
     const isOwner = useIsOwner();
 
     return (
-        <div className="container max-w-5xl mx-auto py-10">
-            <PageHeader
-                title="Portfolio"
-                description="A collection of my projects and work."
-            >
-                {isOwner && (
-                    <Button asChild className="bg-luigi-green hover:bg-luigi-green/90 text-white font-bold h-9">
-                        <Link to="/write?type=PORTFOLIO">
-                            <Pencil className="mr-2 h-4 w-4" />
-                            New project
-                        </Link>
-                    </Button>
-                )}
-            </PageHeader>
+        <ContentReveal className="container max-w-5xl mx-auto py-10">
+            <div>
+                <PageHeader
+                    title="Portfolio"
+                    description="A collection of my projects and work."
+                >
+                    {isOwner && (
+                        <Button asChild className="bg-luigi-green hover:bg-luigi-green/90 text-white font-bold h-9">
+                            <Link to="/write?type=PORTFOLIO">
+                                <Pencil className="mr-2 h-4 w-4" />
+                                New project
+                            </Link>
+                        </Button>
+                    )}
+                </PageHeader>
+            </div>
 
             <React.Suspense fallback={
                 <PostListSkeleton
@@ -66,6 +69,6 @@ export const PortfolioListPage = () => {
             }>
                 <PortfolioProjectList />
             </React.Suspense>
-        </div>
+        </ContentReveal>
     );
 };

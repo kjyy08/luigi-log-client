@@ -149,7 +149,7 @@ export const PostList = ({ fixedType, showTabs = true, viewMode = "grid", search
 								onClick={() => fetchNextPage()}
 								disabled={isFetchingNextPage}
 							>
-								{isFetchingNextPage ? "Loading..." : "Load more"}
+								{isFetchingNextPage ? "Loading more" : "Load more"}
 							</Button>
 						</div>
 					)}
