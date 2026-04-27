@@ -87,4 +87,5 @@ export interface UpdatePostRequest {
 	title?: string;
 	body?: string;
 	status?: PostStatus;
+	tags?: string[];
 }

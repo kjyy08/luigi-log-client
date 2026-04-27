@@ -56,6 +56,7 @@ export const useEditorActions = () => {
 			title,
 			body,
 			status: "PUBLISHED" as const,
+			tags,
 		};
 
 		try {
