@@ -185,9 +185,7 @@ export const PostContributionGraph = () => {
 	const graphWidth = getGraphWidth(weeks.length);
 	const blockWidth = getBlockWidth(weeks.length);
 	const heatmapVars = {
-		"--cell-size": "10px",
-		"--cell-gap": "3px",
-		"--label-column-width": `${LABEL_COLUMN_WIDTH}px`,
+		width: blockWidth,
 	} as CSSProperties;
 	const graphGridStyle = {
 		gridTemplateColumns: `repeat(${weeks.length}, var(--cell-size))`,
@@ -225,8 +223,8 @@ export const PostContributionGraph = () => {
 				<div className="overflow-x-auto overflow-y-hidden pb-1">
 					<div className="flex w-max">
 						<div
-							className="shrink-0 space-y-2 lg:[--cell-size:11px]"
-							style={{ ...heatmapVars, width: blockWidth }}
+							className="shrink-0 space-y-2 [--cell-gap:3px] [--cell-size:10px] [--label-column-width:28px] lg:[--cell-size:11px]"
+							style={heatmapVars}
 						>
 							<div className="grid gap-x-[6px]" style={layoutGridStyle}>
 								<div aria-hidden="true" />
