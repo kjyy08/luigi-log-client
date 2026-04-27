@@ -45,7 +45,7 @@ export const HomeSkeleton = () => {
                     <RecentPostListSkeleton />
 
                     {/* Contribution Graph Skeleton */}
-                    <div className="border border-border rounded-lg p-4 space-y-3 overflow-hidden">
+                    <div className="border border-border rounded-lg bg-background p-3 sm:p-4 lg:p-5 space-y-3 overflow-hidden">
                         <div className="space-y-1">
                             <Skeleton className="h-4 w-48" />
                             <Skeleton className="h-3 w-36" />
