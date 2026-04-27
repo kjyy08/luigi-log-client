@@ -18,9 +18,10 @@ export const PostCard = ({
 	onDelete,
 	className,
 }: PostCardProps) => {
+	const postPath = `/posts/${post.author.username}/${post.slug}`;
+
 	return (
-		<Link
-			to={`/posts/${post.author.username}/${post.slug}`}
+		<article
 			className={cn(
 				"group flex flex-col gap-4 rounded-2xl border p-5 transition-all hover:bg-muted/50 hover:shadow-lg hover:-translate-y-1",
 				className,
@@ -28,22 +29,28 @@ export const PostCard = ({
 		>
 			{/* Thumbnail Placeholder */}
 			<div className="aspect-video w-full overflow-hidden rounded-xl bg-muted/50 border border-border/50 relative">
-				<div className="absolute inset-0 bg-gradient-to-br from-luigi-green/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-				<div className="flex h-full items-center justify-center text-muted-foreground/30 font-bold text-4xl select-none">
-					LOG
-				</div>
-
-				{/* Content Type Badge */}
-				<div
-					className={cn(
-						"absolute bottom-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm",
-						post.type === "PORTFOLIO"
-							? "bg-luigi-blue text-white"
-							: "bg-luigi-green text-white",
-					)}
+				<Link
+					to={postPath}
+					aria-label={`Read ${post.title}`}
+					className="block h-full w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 				>
-					{post.type}
-				</div>
+					<div className="absolute inset-0 bg-gradient-to-br from-luigi-green/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+					<div className="flex h-full items-center justify-center text-muted-foreground/30 font-bold text-4xl select-none">
+						LOG
+					</div>
+
+					{/* Content Type Badge */}
+					<div
+						className={cn(
+							"absolute bottom-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm",
+							post.type === "PORTFOLIO"
+								? "bg-luigi-blue text-white"
+								: "bg-luigi-green text-white",
+						)}
+					>
+						{post.type}
+					</div>
+				</Link>
 
 				{isAuthenticated && (
 					<div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -82,21 +89,25 @@ export const PostCard = ({
 					<span className="opacity-30">|</span>
 					<span>{new Date(post.createdAt).toLocaleDateString()}</span>
 				</div>
-				<h3 className="text-xl font-bold leading-tight group-hover:text-luigi-green transition-colors">
+				<Link
+					to={postPath}
+					className="block text-xl font-bold leading-tight transition-colors group-hover:text-luigi-green hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+				>
 					{post.title}
-				</h3>
+				</Link>
 			</div>
 
 			<div className="mt-auto space-y-3 pt-2">
 				<div className="flex flex-wrap gap-2">
 					{post.tags && post.tags.length > 0 ? (
 						post.tags.map((tag) => (
-						<span
-							key={tag}
-							className="inline-flex items-center rounded-md bg-secondary/50 border border-border px-2 py-0.5 text-[11px] font-medium text-secondary-foreground transition-colors group-hover:border-luigi-green/30"
-						>
-							#{tag}
-						</span>
+							<Link
+								key={tag}
+								to={`/blog?tag=${encodeURIComponent(tag)}`}
+								className="inline-flex items-center rounded-md bg-secondary/50 border border-border px-2 py-0.5 text-[11px] font-medium text-secondary-foreground transition-colors hover:border-luigi-green/50 hover:text-luigi-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+							>
+								#{tag}
+							</Link>
 						))
 					) : (
 						<span className="text-[11px] text-muted-foreground opacity-50 italic">
@@ -106,6 +117,6 @@ export const PostCard = ({
 				</div>
 				<PostStats viewCount={post.viewCount} commentCount={post.commentCount} />
 			</div>
-		</Link>
+		</article>
 	);
 };

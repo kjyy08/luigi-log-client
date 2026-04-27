@@ -39,13 +39,13 @@ export const PostListItem = ({
 				{showTopics && post.tags && post.tags.length > 0 && (
 					<div className="flex items-center gap-2">
 						{post.tags.map((tag) => (
-							<Badge
+							<Link
 								key={tag}
-								variant="secondary"
-								className="bg-luigi-blue/10 text-luigi-blue hover:bg-luigi-blue/20 rounded-full border-none"
+								to={`/blog?tag=${encodeURIComponent(tag)}`}
+								className="inline-flex items-center rounded-full bg-luigi-blue/10 px-2.5 py-0.5 text-xs font-semibold text-luigi-blue transition-colors hover:bg-luigi-blue/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 							>
 								{tag}
-							</Badge>
+							</Link>
 						))}
 					</div>
 				)}

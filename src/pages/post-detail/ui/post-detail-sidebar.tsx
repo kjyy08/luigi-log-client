@@ -1,4 +1,5 @@
 import { User, Folder } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface PostDetailSidebarProps {
     author: {
@@ -10,6 +11,8 @@ interface PostDetailSidebarProps {
 }
 
 export const PostDetailSidebar = ({ author, tags, type }: PostDetailSidebarProps) => {
+	const categoryLabel = type === "PORTFOLIO" ? "Portfolio" : "Blog";
+
     return (
         <aside className="space-y-6 md:pl-4">
             <SidebarSection title="Assignees">
@@ -27,16 +30,17 @@ export const PostDetailSidebar = ({ author, tags, type }: PostDetailSidebarProps
                 </div>
             </SidebarSection>
 
-            <SidebarSection title="Labels">
+            <SidebarSection title="Tags">
                 {tags.length > 0 ? (
                     <div className="flex flex-wrap gap-1.5">
                         {tags.map(tag => (
-                            <span
+                            <Link
                                 key={tag}
+                                to={`/blog?tag=${encodeURIComponent(tag)}`}
                                 className="px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground text-xs font-medium border hover:border-foreground/20 transition-colors cursor-pointer"
                             >
                                 {tag}
-                            </span>
+                            </Link>
                         ))}
                     </div>
                 ) : (
@@ -44,17 +48,11 @@ export const PostDetailSidebar = ({ author, tags, type }: PostDetailSidebarProps
                 )}
             </SidebarSection>
 
-            <SidebarSection title="Projects">
+            <SidebarSection title="Category">
                 <div className="flex items-center gap-2 text-sm text-foreground">
                     <Folder className="h-4 w-4 text-muted-foreground" />
-                    <span>{type}</span>
+                    <span>{categoryLabel}</span>
                 </div>
-            </SidebarSection>
-
-            <SidebarSection title="Milestone">
-                <span className="text-sm text-muted-foreground hover:text-luigi-green cursor-pointer">
-                    No milestone
-                </span>
             </SidebarSection>
         </aside>
     );
