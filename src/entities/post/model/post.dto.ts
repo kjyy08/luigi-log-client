@@ -11,6 +11,7 @@ export interface PostAuthor {
 export interface PostListRequest {
 	status?: PostStatus;
 	type?: PostType;
+	tag?: string;
 	q?: string;
 	limit?: number;
 	cursor?: string;

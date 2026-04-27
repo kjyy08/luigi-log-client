@@ -11,6 +11,7 @@ interface PostListProps {
 	showTabs?: boolean;
 	viewMode?: "grid" | "list";
 	searchQuery?: string;
+	tag?: string;
 }
 
 const TABS = [
@@ -21,15 +22,17 @@ const TABS = [
 
 const PAGE_SIZE = 10;
 
-export const PostList = ({ fixedType, showTabs = true, viewMode = "grid", searchQuery }: PostListProps) => {
+export const PostList = ({ fixedType, showTabs = true, viewMode = "grid", searchQuery, tag }: PostListProps) => {
 	const [activeTab, setActiveTab] = useState<string>(fixedType ?? "all");
 
 	// If fixedType is provided, it takes precedence. Otherwise use activeTab.
 	const typeFilter = fixedType ?? (activeTab === "all" ? undefined : (activeTab as PostType));
 	const trimmedSearchQuery = searchQuery?.trim() || undefined;
+	const trimmedTag = tag?.trim() || undefined;
 	const listParams = {
 		type: typeFilter,
 		status: "PUBLISHED" as const,
+		tag: trimmedTag,
 		q: trimmedSearchQuery,
 		limit: PAGE_SIZE,
 	};

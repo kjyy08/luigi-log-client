@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Pencil } from "lucide-react";
+import { Pencil, X } from "lucide-react";
 import { PageHeader } from "@/shared/ui/page-header";
 import { PostList } from "@/features/post-list";
 import { useIsOwner } from "@/shared/hooks/use-is-owner";
@@ -12,6 +12,7 @@ export const BlogListPage = () => {
 	const isOwner = useIsOwner();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const searchQuery = searchParams.get("q")?.trim() ?? "";
+	const tagFilter = searchParams.get("tag")?.trim() ?? "";
 
 	const handleSearchChange = (query: string) => {
 		const trimmedQuery = query.trim();
@@ -24,6 +25,14 @@ export const BlogListPage = () => {
 				next.delete("q");
 			}
 
+			return next;
+		});
+	};
+
+	const clearTagFilter = () => {
+		setSearchParams((current) => {
+			const next = new URLSearchParams(current);
+			next.delete("tag");
 			return next;
 		});
 	};
@@ -48,8 +57,20 @@ export const BlogListPage = () => {
 
 			<FilterBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
 
+			{tagFilter && (
+				<div className="mb-4 flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+					<span>
+						Filtered by tag <span className="font-medium text-foreground">#{tagFilter}</span>
+					</span>
+					<Button variant="ghost" size="sm" className="h-7 px-2" onClick={clearTagFilter}>
+						<X className="mr-1 h-3.5 w-3.5" />
+						Clear
+					</Button>
+				</div>
+			)}
+
 			<React.Suspense fallback={null}>
-				<PostList fixedType="BLOG" showTabs={false} viewMode="list" searchQuery={searchQuery} />
+				<PostList fixedType="BLOG" showTabs={false} viewMode="list" searchQuery={searchQuery} tag={tagFilter} />
 			</React.Suspense>
 		</ContentReveal>
 	);
