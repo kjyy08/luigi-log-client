@@ -51,7 +51,7 @@ export const HomeSkeleton = () => {
                             <Skeleton className="h-3 w-36" />
                         </div>
                         <div className="overflow-x-auto overflow-y-hidden pb-1">
-                            <div className="flex w-max">
+                            <div className="flex w-max lg:min-w-full lg:justify-center">
                                 <div className="w-[717px] shrink-0 space-y-2">
                                     <div className="grid grid-cols-[28px_683px] gap-x-[6px]">
                                     <div aria-hidden="true" />
@@ -86,7 +86,7 @@ export const HomeSkeleton = () => {
                                     <Skeleton className="h-3 w-6" />
                                 </div>
                                 </div>
-                                <div className="w-3 shrink-0" aria-hidden="true" />
+                                <div className="w-3 shrink-0 lg:hidden" aria-hidden="true" />
                             </div>
                         </div>
                     </div>

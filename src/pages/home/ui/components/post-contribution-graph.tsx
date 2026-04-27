@@ -212,7 +212,7 @@ export const PostContributionGraph = () => {
 			</div>
 			<Card className="overflow-hidden border-border bg-background p-3 sm:p-4">
 				<div className="overflow-x-auto overflow-y-hidden pb-1">
-					<div className="flex w-max">
+					<div className="flex w-max lg:min-w-full lg:justify-center">
 						<div className="shrink-0 space-y-2" style={{ width: wrapperWidth }}>
 							<div className="grid gap-x-[6px]" style={layoutGridStyle}>
 								<div aria-hidden="true" />
@@ -288,7 +288,7 @@ export const PostContributionGraph = () => {
 						</div>
 						<div
 							aria-hidden="true"
-							className="shrink-0"
+							className="shrink-0 lg:hidden"
 							style={{ width: TRAILING_SCROLL_PADDING }}
 						/>
 					</div>
