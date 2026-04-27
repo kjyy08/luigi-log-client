@@ -1,12 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import type { CSSProperties } from "react";
 import { postQueries } from "@/entities/post/model/post.queries";
 import { Card } from "@/shared/ui/card";
 
-const CELL_SIZE = 10;
-const CELL_GAP = 3;
 const ROW_COUNT = 7;
 const TRAILING_SCROLL_PADDING = 12;
+const LABEL_COLUMN_WIDTH = 28;
+const GRAPH_COLUMN_GAP = 6;
+
+const getGraphWidth = (weekCount: number) =>
+	`calc(${weekCount} * var(--cell-size) + ${weekCount - 1} * var(--cell-gap))`;
+
+const getBlockWidth = (weekCount: number) =>
+	`calc(var(--label-column-width) + ${GRAPH_COLUMN_GAP}px + ${getGraphWidth(weekCount)})`;
 
 const WEEKDAY_LABELS = [
 	{ row: 2, label: "Mon" },
@@ -175,19 +182,23 @@ export const PostContributionGraph = () => {
 		};
 	}, [data, range.from, range.to]);
 
-	const labelColumnWidth = 28;
-	const graphWidth = weeks.length * CELL_SIZE + (weeks.length - 1) * CELL_GAP;
-	const wrapperWidth = labelColumnWidth + CELL_GAP * 2 + graphWidth;
+	const graphWidth = getGraphWidth(weeks.length);
+	const blockWidth = getBlockWidth(weeks.length);
+	const heatmapVars = {
+		"--cell-size": "10px",
+		"--cell-gap": "3px",
+		"--label-column-width": `${LABEL_COLUMN_WIDTH}px`,
+	} as CSSProperties;
 	const graphGridStyle = {
-		gridTemplateColumns: `repeat(${weeks.length}, ${CELL_SIZE}px)`,
-		columnGap: `${CELL_GAP}px`,
+		gridTemplateColumns: `repeat(${weeks.length}, var(--cell-size))`,
+		columnGap: "var(--cell-gap)",
 	};
 	const weekGridStyle = {
-		gridTemplateRows: `repeat(${ROW_COUNT}, ${CELL_SIZE}px)`,
-		rowGap: `${CELL_GAP}px`,
+		gridTemplateRows: `repeat(${ROW_COUNT}, var(--cell-size))`,
+		rowGap: "var(--cell-gap)",
 	};
 	const layoutGridStyle = {
-		gridTemplateColumns: `${labelColumnWidth}px ${graphWidth}px`,
+		gridTemplateColumns: `var(--label-column-width) ${graphWidth}`,
 	};
 	const totalCount = data?.totalCount ?? 0;
 	const title = isError
@@ -210,10 +221,13 @@ export const PostContributionGraph = () => {
 					<p className="text-xs text-muted-foreground">{lastMonthText}</p>
 				)}
 			</div>
-			<Card className="overflow-hidden border-border bg-background p-3 sm:p-4">
+			<Card className="overflow-hidden border-border bg-background p-3 sm:p-4 lg:p-5">
 				<div className="overflow-x-auto overflow-y-hidden pb-1">
-					<div className="flex w-max lg:min-w-full lg:justify-center">
-						<div className="shrink-0 space-y-2" style={{ width: wrapperWidth }}>
+					<div className="flex w-max">
+						<div
+							className="shrink-0 space-y-2 lg:[--cell-size:11px]"
+							style={{ ...heatmapVars, width: blockWidth }}
+						>
 							<div className="grid gap-x-[6px]" style={layoutGridStyle}>
 								<div aria-hidden="true" />
 								<div
@@ -225,7 +239,7 @@ export const PostContributionGraph = () => {
 											key={`${month.label}-${month.weekIndex}`}
 											className="absolute top-0"
 											style={{
-												left: month.weekIndex * (CELL_SIZE + CELL_GAP),
+												left: `calc(${month.weekIndex} * (var(--cell-size) + var(--cell-gap)))`,
 											}}
 										>
 											{month.label}
@@ -260,7 +274,7 @@ export const PostContributionGraph = () => {
 														key={day.date}
 														aria-hidden={!day.isInRange}
 														aria-label={day.isInRange ? label : undefined}
-														className={`h-[10px] w-[10px] rounded-[2px] ${
+														className={`h-[var(--cell-size)] w-[var(--cell-size)] rounded-[2px] ${
 															day.isInRange
 																? getContributionClassName(day.count)
 																: "bg-transparent"
@@ -279,7 +293,7 @@ export const PostContributionGraph = () => {
 								{[0, 1, 2, 3, 4].map((count) => (
 									<div
 										key={count}
-										className={`h-[10px] w-[10px] rounded-[2px] ${getContributionClassName(count)}`}
+										className={`h-[var(--cell-size)] w-[var(--cell-size)] rounded-[2px] ${getContributionClassName(count)}`}
 										aria-hidden="true"
 									/>
 								))}
@@ -288,7 +302,7 @@ export const PostContributionGraph = () => {
 						</div>
 						<div
 							aria-hidden="true"
-							className="shrink-0 lg:hidden"
+							className="shrink-0"
 							style={{ width: TRAILING_SCROLL_PADDING }}
 						/>
 					</div>

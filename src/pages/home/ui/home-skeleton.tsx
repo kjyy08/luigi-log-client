@@ -51,42 +51,42 @@ export const HomeSkeleton = () => {
                             <Skeleton className="h-3 w-36" />
                         </div>
                         <div className="overflow-x-auto overflow-y-hidden pb-1">
-                            <div className="flex w-max lg:min-w-full lg:justify-center">
-                                <div className="w-[717px] shrink-0 space-y-2">
-                                    <div className="grid grid-cols-[28px_683px] gap-x-[6px]">
-                                    <div aria-hidden="true" />
-                                    <div className="mb-1 h-4 grid grid-cols-12 gap-4">
-                                        {Array.from({ length: 12 }).map((_, i) => (
-                                            <Skeleton key={i} className="h-3 w-5" />
+                            <div className="flex w-max">
+                                <div className="w-[717px] shrink-0 space-y-2 lg:w-[770px]">
+                                    <div className="grid grid-cols-[28px_683px] gap-x-[6px] lg:grid-cols-[28px_736px]">
+                                        <div aria-hidden="true" />
+                                        <div className="mb-1 h-4 grid grid-cols-12 gap-4">
+                                            {Array.from({ length: 12 }).map((_, i) => (
+                                                <Skeleton key={i} className="h-3 w-5" />
+                                            ))}
+                                        </div>
+                                        <div className="grid grid-rows-7 gap-[3px] text-[10px] leading-none">
+                                            <Skeleton className="row-start-2 h-3 w-6" />
+                                            <Skeleton className="row-start-4 h-3 w-6" />
+                                            <Skeleton className="row-start-6 h-3 w-5" />
+                                        </div>
+                                        <div className="grid grid-cols-[repeat(53,10px)] gap-x-[3px] lg:grid-cols-[repeat(53,11px)]">
+                                            {Array.from({ length: 53 }).map((_, weekIndex) => (
+                                                <div key={weekIndex} className="grid grid-rows-7 gap-y-[3px]">
+                                                    {Array.from({ length: 7 }).map((__, dayIndex) => (
+                                                        <Skeleton
+                                                            key={dayIndex}
+                                                            className="h-[10px] w-[10px] rounded-[2px] lg:h-[11px] lg:w-[11px]"
+                                                        />
+                                                    ))}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end gap-1">
+                                        <Skeleton className="h-3 w-6" />
+                                        {Array.from({ length: 5 }).map((_, i) => (
+                                            <Skeleton key={i} className="h-[10px] w-[10px] rounded-[2px] lg:h-[11px] lg:w-[11px]" />
                                         ))}
-                                    </div>
-                                    <div className="grid grid-rows-7 gap-[3px] text-[10px] leading-none">
-                                        <Skeleton className="row-start-2 h-3 w-6" />
-                                        <Skeleton className="row-start-4 h-3 w-6" />
-                                        <Skeleton className="row-start-6 h-3 w-5" />
-                                    </div>
-                                    <div className="grid grid-cols-[repeat(53,10px)] gap-x-[3px]">
-                                        {Array.from({ length: 53 }).map((_, weekIndex) => (
-                                            <div key={weekIndex} className="grid grid-rows-7 gap-y-[3px]">
-                                                {Array.from({ length: 7 }).map((__, dayIndex) => (
-                                                    <Skeleton
-                                                        key={dayIndex}
-                                                        className="h-[10px] w-[10px] rounded-[2px]"
-                                                    />
-                                                ))}
-                                            </div>
-                                        ))}
+                                        <Skeleton className="h-3 w-6" />
                                     </div>
                                 </div>
-                                <div className="flex justify-end gap-1">
-                                    <Skeleton className="h-3 w-6" />
-                                    {Array.from({ length: 5 }).map((_, i) => (
-                                        <Skeleton key={i} className="h-[10px] w-[10px] rounded-[2px]" />
-                                    ))}
-                                    <Skeleton className="h-3 w-6" />
-                                </div>
-                                </div>
-                                <div className="w-3 shrink-0 lg:hidden" aria-hidden="true" />
+                                <div className="w-3 shrink-0" aria-hidden="true" />
                             </div>
                         </div>
                     </div>
