@@ -17,6 +17,13 @@ export interface PostListRequest {
 	cursor?: string;
 }
 
+export interface AdjacentPost {
+	postId: string;
+	title: string;
+	slug: string;
+	createdAt: string;
+}
+
 export interface PostResponse {
 	postId: string;
 	author: PostAuthor;
@@ -31,6 +38,8 @@ export interface PostResponse {
 	createdAt: string;
 	updatedAt?: string;
 	description?: string;
+	previousPost?: AdjacentPost | null;
+	nextPost?: AdjacentPost | null;
 }
 
 export interface PostSummary {
