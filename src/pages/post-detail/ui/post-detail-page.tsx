@@ -98,6 +98,7 @@ export const PostDetailPage = () => {
 						date={post.createdAt}
 						content={content}
 						headingIds={headingIds}
+						headings={headings}
 						type="ISSUE"
 					/>
 
@@ -122,8 +123,7 @@ export const PostDetailPage = () => {
 					</div>
 				</div>
 
-				<aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-					<ReadingHud headings={headings} />
+				<aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
 					<PostDetailSidebar
 						author={{
 							nickname: post.author?.nickname || "Anonymous",
@@ -132,6 +132,7 @@ export const PostDetailPage = () => {
 						tags={post.tags}
 						type={post.type}
 					/>
+					<ReadingHud headings={headings} />
 				</aside>
 			</div>
 			</article>

@@ -14,7 +14,7 @@ export const PostDetailSidebar = ({ author, tags, type }: PostDetailSidebarProps
 	const categoryLabel = type === "PORTFOLIO" ? "Portfolio" : "Blog";
 
     return (
-        <aside className="space-y-6 md:pl-4">
+        <div className="space-y-6 md:pl-4">
             <SidebarSection title="Assignees">
                 <div className="flex items-center gap-2 text-sm text-foreground group cursor-pointer hover:text-luigi-green">
                     <div className="w-5 h-5 rounded-full overflow-hidden border">
@@ -27,6 +27,13 @@ export const PostDetailSidebar = ({ author, tags, type }: PostDetailSidebarProps
                         )}
                     </div>
                     <span className="font-medium">{author.nickname}</span>
+                </div>
+            </SidebarSection>
+
+            <SidebarSection title="Category">
+                <div className="flex items-center gap-2 text-sm text-foreground">
+                    <Folder className="h-4 w-4 text-muted-foreground" />
+                    <span>{categoryLabel}</span>
                 </div>
             </SidebarSection>
 
@@ -47,14 +54,7 @@ export const PostDetailSidebar = ({ author, tags, type }: PostDetailSidebarProps
                     <span className="text-sm text-muted-foreground">None yet</span>
                 )}
             </SidebarSection>
-
-            <SidebarSection title="Category">
-                <div className="flex items-center gap-2 text-sm text-foreground">
-                    <Folder className="h-4 w-4 text-muted-foreground" />
-                    <span>{categoryLabel}</span>
-                </div>
-            </SidebarSection>
-        </aside>
+        </div>
     );
 };
 
