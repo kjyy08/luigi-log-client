@@ -2,8 +2,6 @@ import type { AdjacentPost } from "./post.dto";
 
 export type AdjacentPostDirection = "previous" | "next";
 
-const POST_DETAIL_PATH_PATTERN = /^\/posts\/[^/]+\/[^/]+$/;
-
 export const hasAdjacentPosts = (
 	previousPost?: AdjacentPost | null,
 	nextPost?: AdjacentPost | null,
@@ -33,14 +31,8 @@ export const getAdjacentPostPlacementClassName = (
 		: "sm:col-start-2 sm:justify-self-end sm:text-right";
 };
 
-export const isPostDetailPath = (pathname: string) => POST_DETAIL_PATH_PATTERN.test(pathname);
-
-export const shouldScrollPostRouteToTop = (
+export const shouldScrollRouteToTop = (
 	fromPathname: string,
 	toPathname: string,
 	toHash: string,
-) =>
-	!toHash &&
-	fromPathname !== toPathname &&
-	isPostDetailPath(fromPathname) &&
-	isPostDetailPath(toPathname);
+) => !toHash && fromPathname !== toPathname;

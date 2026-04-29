@@ -6,7 +6,7 @@ import {
     buildAdjacentPostPath,
     getAdjacentPostPlacementClassName,
     hasAdjacentPosts,
-    shouldScrollPostRouteToTop,
+    shouldScrollRouteToTop,
 } from "./adjacent-post-navigation.ts";
 
 test("builds adjacent post paths with the current author's username fallback", () => {
@@ -38,8 +38,10 @@ test("places a single next post at the desktop end without rendering a placehold
     assert.equal(getAdjacentPostPlacementClassName("next", false, true), "sm:col-start-2 sm:justify-self-end sm:text-right");
 });
 
-test("scrolls post-detail route changes to top only when the target has no hash", () => {
-    assert.equal(shouldScrollPostRouteToTop("/posts/luigi/old-post", "/posts/luigi/new-post", ""), true);
-    assert.equal(shouldScrollPostRouteToTop("/posts/luigi/old-post", "/posts/luigi/new-post", "#heading"), false);
-    assert.equal(shouldScrollPostRouteToTop("/blog", "/posts/luigi/new-post", ""), false);
+test("scrolls pathname route changes to top only when the target has no hash", () => {
+    assert.equal(shouldScrollRouteToTop("/posts/luigi/old-post", "/posts/luigi/new-post", ""), true);
+    assert.equal(shouldScrollRouteToTop("/blog", "/portfolio", ""), true);
+    assert.equal(shouldScrollRouteToTop("/blog", "/posts/luigi/new-post", ""), true);
+    assert.equal(shouldScrollRouteToTop("/posts/luigi/old-post", "/posts/luigi/new-post", "#heading"), false);
+    assert.equal(shouldScrollRouteToTop("/blog", "/blog", ""), false);
 });

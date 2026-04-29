@@ -67,7 +67,7 @@ export const PostAdjacentNavigation = ({
 	return (
 		<nav
 			aria-labelledby="post-adjacent-navigation-title"
-			className={cn("space-y-3", className)}
+			className={cn("w-full min-w-0 max-w-full space-y-3", className)}
 		>
 			<h2
 				id="post-adjacent-navigation-title"
@@ -75,7 +75,7 @@ export const PostAdjacentNavigation = ({
 			>
 				Continue reading
 			</h2>
-			<div className="grid min-w-0 gap-3 sm:grid-cols-2">
+			<div className="grid w-full min-w-0 max-w-full gap-3 sm:grid-cols-2">
 				{previousPost && (
 					<AdjacentPostCard
 						post={previousPost}
