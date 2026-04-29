@@ -2,19 +2,28 @@ export interface MarkdownHeading {
     id: string;
     level: number;
     text: string;
+    line?: number;
 }
 
-const normalizeHeadingText = (text: string) =>
+export interface HeadingPosition {
+    id: string;
+    top: number;
+}
+
+const DEFAULT_ACTIVE_OFFSET = 112;
+
+export const normalizeHeadingText = (text: string) =>
     text
         .replace(/[`*_~[\]()#>]/g, "")
         .replace(/\s+/g, " ")
         .trim();
 
+const buildHeadingMatchKey = (level: number, text: string) => `${level}:${normalizeHeadingText(text)}`;
+
 export const buildHeadingId = (text: string, usedIds: Map<string, number>) => {
     const base = normalizeHeadingText(text)
         .toLowerCase()
-        .normalize("NFKD")
-        .replace(/[\u0300-\u036f]/g, "")
+        .normalize("NFKC")
         .replace(/[^a-z0-9가-힣]+/g, "-")
         .replace(/^-+|-+$/g, "") || "section";
 
@@ -29,7 +38,9 @@ export const extractMarkdownHeadings = (markdown: string): MarkdownHeading[] => 
     const headings: MarkdownHeading[] = [];
     let inFence = false;
 
-    for (const line of markdown.split(/\r?\n/)) {
+    const lines = markdown.split(/\r?\n/);
+
+    for (const [index, line] of lines.entries()) {
         if (/^\s*```/.test(line) || /^\s*~~~/.test(line)) {
             inFence = !inFence;
             continue;
@@ -47,8 +58,63 @@ export const extractMarkdownHeadings = (markdown: string): MarkdownHeading[] => 
             id: buildHeadingId(text, usedIds),
             level: match[1].length,
             text,
+            line: index + 1,
         });
     }
 
     return headings;
+};
+
+export const createMarkdownHeadingIdResolver = (headings: MarkdownHeading[]) => {
+    const idsByHeading = new Map<string, string[]>();
+    const idBySourceLine = new Map<string, string>();
+
+    for (const heading of headings) {
+        const key = buildHeadingMatchKey(heading.level, heading.text);
+        idsByHeading.set(key, [...(idsByHeading.get(key) ?? []), heading.id]);
+
+        if (typeof heading.line === "number") {
+            idBySourceLine.set(`${heading.line}:${key}`, heading.id);
+        }
+    }
+
+    return (level: number, text: string, line?: number) => {
+        const key = buildHeadingMatchKey(level, text);
+
+        if (typeof line === "number") {
+            const id = idBySourceLine.get(`${line}:${key}`);
+            if (id) return id;
+        }
+
+        const ids = idsByHeading.get(key);
+        const id = ids?.shift();
+
+        if (ids?.length === 0) {
+            idsByHeading.delete(key);
+        }
+
+        return id;
+    };
+};
+
+export const getActiveHeadingId = (
+    headings: MarkdownHeading[],
+    positions: HeadingPosition[],
+    activeOffset = DEFAULT_ACTIVE_OFFSET,
+) => {
+    const positionById = new Map(positions.map((position) => [position.id, position.top]));
+    const measuredHeadings = headings
+        .map((heading) => ({ ...heading, top: positionById.get(heading.id) }))
+        .filter((heading): heading is MarkdownHeading & { top: number } => typeof heading.top === "number");
+
+    if (measuredHeadings.length === 0) return headings[0]?.id ?? "";
+
+    const firstBelowOffset = measuredHeadings.find((heading) => heading.top > activeOffset);
+    if (firstBelowOffset === measuredHeadings[0]) return measuredHeadings[0].id;
+
+    const activeHeading = [...measuredHeadings]
+        .reverse()
+        .find((heading) => heading.top <= activeOffset);
+
+    return activeHeading?.id ?? measuredHeadings[0].id;
 };

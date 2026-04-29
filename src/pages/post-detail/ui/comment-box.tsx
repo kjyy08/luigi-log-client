@@ -1,6 +1,7 @@
 import { ComponentProps } from "react";
 import { cn } from "@/shared/lib/utils";
 import { MarkdownView } from "@/shared/ui/markdown-view";
+import type { MarkdownHeading } from "../model/reading-navigation";
 
 interface CommentBoxProps extends ComponentProps<"div"> {
     author: {
@@ -12,9 +13,10 @@ interface CommentBoxProps extends ComponentProps<"div"> {
     type?: "ISSUE" | "COMMENT";
     actions?: React.ReactNode;
     headingIds?: string[];
+    headings?: MarkdownHeading[];
 }
 
-export const CommentBox = ({ author, date, content, type = "ISSUE", actions, headingIds, className, ...props }: CommentBoxProps) => {
+export const CommentBox = ({ author, date, content, type = "ISSUE", actions, headingIds, headings, className, ...props }: CommentBoxProps) => {
     return (
         <div className={cn("flex gap-0 md:gap-4", className)} {...props}>
             <div className="hidden md:block flex-none">
@@ -51,7 +53,7 @@ export const CommentBox = ({ author, date, content, type = "ISSUE", actions, hea
 
                     {/* Body */}
                     <div className="min-h-[200px] bg-background p-3 sm:p-4 md:p-8">
-                        <MarkdownView content={content} headingIds={headingIds} />
+                        <MarkdownView content={content} headingIds={headingIds} headings={headings} />
                     </div>
                 </div>
             </div>

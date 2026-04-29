@@ -14,6 +14,7 @@ import typescript from "react-syntax-highlighter/dist/esm/languages/prism/typesc
 import yaml from "react-syntax-highlighter/dist/esm/languages/prism/yaml";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Check, Copy, X } from "lucide-react";
+import { createMarkdownHeadingIdResolver, type MarkdownHeading } from "@/pages/post-detail/model/reading-navigation";
 import { useTheme } from "@/shared/providers/theme-provider";
 import { cn } from "@/shared/lib/utils";
 
@@ -98,19 +99,37 @@ const CodeBlock = ({ language, value }: { language?: string; value: string }) =>
     );
 };
 
+const getNodeText = (node: unknown): string => {
+    if (typeof node === "string" || typeof node === "number") return String(node);
+    if (Array.isArray(node)) return node.map(getNodeText).join("");
+    if (node && typeof node === "object" && "props" in node) {
+        return getNodeText((node as { props?: { children?: unknown } }).props?.children);
+    }
+
+    return "";
+};
+
+const getNodeStartLine = (node: unknown): number | undefined => {
+    if (!node || typeof node !== "object" || !("position" in node)) return undefined;
+
+    return (node as { position?: { start?: { line?: number } } }).position?.start?.line;
+};
+
 interface MarkdownViewProps {
     content: string;
     className?: string;
     headingIds?: string[];
+    headings?: MarkdownHeading[];
 }
 
-export const MarkdownView = ({ content, className, headingIds = [] }: MarkdownViewProps) => {
+export const MarkdownView = ({ content, className, headingIds = [], headings = [] }: MarkdownViewProps) => {
     let headingIndex = 0;
+    const resolveHeadingId = headings.length > 0 ? createMarkdownHeadingIdResolver(headings) : undefined;
     const headingComponents = ([1, 2, 3, 4] as const).reduce(
         (components, level) => ({
             ...components,
-            [`h${level}`]: ({ children, ...props }: any) => {
-                const id = headingIds[headingIndex++];
+            [`h${level}`]: ({ children, node, ...props }: any) => {
+                const id = resolveHeadingId?.(level, getNodeText(children), getNodeStartLine(node)) ?? (resolveHeadingId ? undefined : headingIds[headingIndex++]);
 
                 return createElement(
                     `h${level}`,

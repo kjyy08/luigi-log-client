@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { MarkdownHeading } from "../model/reading-navigation";
+import { getActiveHeadingId, type MarkdownHeading } from "../model/reading-navigation";
 import { cn } from "@/shared/lib/utils";
 
 interface ReadingHudProps {
@@ -46,51 +46,51 @@ export const ReadingHud = ({ headings }: ReadingHudProps) => {
     const shouldShowToc = headings.length >= 2;
 
     useEffect(() => {
+        setActiveId(headings[0]?.id ?? "");
+    }, [headings]);
+
+    useEffect(() => {
         if (!shouldShowToc) return;
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const visible = entries
-                    .filter((entry) => entry.isIntersecting)
-                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        const updateActiveHeading = () => {
+            const positions = headings.map((heading) => ({
+                id: heading.id,
+                top: document.getElementById(heading.id)?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY,
+            }));
 
-                if (visible?.target.id) {
-                    setActiveId(visible.target.id);
-                }
-            },
-            {
-                rootMargin: "-20% 0px -65% 0px",
-                threshold: [0, 1],
-            },
-        );
+            setActiveId(getActiveHeadingId(headings, positions));
+        };
 
-        headings.forEach((heading) => {
-            const element = document.getElementById(heading.id);
-            if (element) observer.observe(element);
-        });
+        updateActiveHeading();
+        window.addEventListener("scroll", updateActiveHeading, { passive: true });
+        window.addEventListener("resize", updateActiveHeading);
 
-        return () => observer.disconnect();
+        return () => {
+            window.removeEventListener("scroll", updateActiveHeading);
+            window.removeEventListener("resize", updateActiveHeading);
+        };
     }, [headings, shouldShowToc]);
 
     if (!shouldShowToc) return null;
 
     return (
         <nav
-            className="hidden rounded-xl border border-border/80 bg-background/70 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/[0.03] lg:block"
+            className="hidden border-b border-border pb-4 md:pl-4 lg:block"
             aria-label="On this page"
         >
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 On this page
             </p>
-            <ol className="space-y-1.5 border-l border-border/80 dark:border-white/10">
+            <ol className="space-y-1 border-l border-border/80 dark:border-white/10">
                 {headings.map((heading) => (
                     <li key={heading.id}>
                         <a
                             href={`#${heading.id}`}
+                            onClick={() => setActiveId(heading.id)}
                             className={cn(
-                                "block rounded-r-md border-l-2 border-transparent py-1.5 pr-2 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:bg-muted/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                                heading.level > 2 ? "pl-6 text-xs" : "pl-3",
-                                activeId === heading.id && "border-primary bg-primary/10 text-foreground dark:bg-primary/15",
+                                "block rounded-r-md border-l-2 border-transparent py-1 pr-2 text-xs text-muted-foreground transition-colors hover:border-luigi-green/50 hover:bg-muted/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                                heading.level > 2 ? "pl-5" : "pl-3",
+                                activeId === heading.id && "border-luigi-green bg-muted/60 text-foreground",
                             )}
                         >
                             <span className="line-clamp-2">{heading.text}</span>
