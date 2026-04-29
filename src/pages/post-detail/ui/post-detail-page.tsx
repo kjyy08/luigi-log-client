@@ -92,7 +92,7 @@ export const PostDetailPage = () => {
 				)}
 			</IssueHeader>
 
-			<div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px] lg:gap-8">
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-8">
 				<div className="min-w-0 space-y-6 sm:space-y-8">
 					<CommentBox
 						className="-mx-4 sm:mx-0"
