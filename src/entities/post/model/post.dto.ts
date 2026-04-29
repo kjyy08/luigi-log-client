@@ -30,7 +30,6 @@ export interface PostResponse {
 	commentCount?: number;
 	createdAt: string;
 	updatedAt?: string;
-	thumbnail?: string;
 	description?: string;
 }
 

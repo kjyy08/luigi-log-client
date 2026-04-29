@@ -8,7 +8,6 @@ interface EditorState {
     slug: string;
     tags: string[];
     type: PostType;
-    thumbnail?: string | null;
     description?: string;
     postId?: string | null;
     imageUploads: ImageUploadItem[];
@@ -19,7 +18,6 @@ interface EditorState {
     setSlug: (slug: string) => void;
     setTags: (tags: string[]) => void;
     setType: (type: PostType) => void;
-    setThumbnail: (thumbnail: string | null) => void;
     setDescription: (description: string) => void;
     setPostId: (postId: string | null) => void;
     addImageUploads: (uploads: ImageUploadItem[]) => void;
@@ -35,7 +33,6 @@ export const useEditorStore = create<EditorState>()((set) => ({
     slug: "",
     tags: [],
     type: "BLOG",
-    thumbnail: null,
     description: "",
     postId: null,
     imageUploads: [],
@@ -45,7 +42,6 @@ export const useEditorStore = create<EditorState>()((set) => ({
     setSlug: (slug) => set({ slug }),
     setTags: (tags) => set({ tags }),
     setType: (type) => set({ type }),
-    setThumbnail: (thumbnail) => set({ thumbnail }),
     setDescription: (description) => set({ description }),
     setPostId: (postId) => set({ postId }),
     addImageUploads: (uploads) =>
@@ -73,7 +69,6 @@ export const useEditorStore = create<EditorState>()((set) => ({
             slug: "",
             tags: [],
             type: "BLOG",
-            thumbnail: null,
             description: "",
             postId: null,
             imageUploads: [],

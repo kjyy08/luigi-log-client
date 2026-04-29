@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { postQueries } from "@/entities/post/model/post.queries";
@@ -18,7 +18,6 @@ export const PostWritePage = () => {
 		setSlug,
 		setTags,
 		setType,
-		setThumbnail,
 		setDescription,
 		setPostId,
 		reset,
@@ -26,8 +25,40 @@ export const PostWritePage = () => {
 		imageUploads,
 	} = useEditorStore();
 
-	const { publishPost, isPublishing } = useEditorActions();
+	const { publishPost, tempSave, isPublishing } = useEditorActions();
 	const imageUploadBlockMessage = getImageUploadPublishBlockMessage(imageUploads, body);
+	const primaryActions = (
+		<div className="space-y-3">
+			<div>
+				<p className="text-sm font-semibold">Actions</p>
+				<p className="text-xs text-muted-foreground">
+					{id ? "Update this post without scrolling." : "Save locally or publish without scrolling."}
+				</p>
+			</div>
+			{imageUploadBlockMessage && (
+				<p className="text-sm text-destructive" role="status">
+					{imageUploadBlockMessage}
+				</p>
+			)}
+			<div className="flex flex-col gap-2">
+				{!id && (
+					<Button variant="outline" onClick={tempSave} className="w-full border-luigi-green/50 text-luigi-green hover:bg-luigi-green/10">
+						<Save className="mr-2 h-4 w-4" />
+						Save Draft
+					</Button>
+				)}
+				<Button
+					variant="default"
+					onClick={publishPost}
+					disabled={isPublishing || !!imageUploadBlockMessage}
+					className="w-full bg-luigi-green hover:bg-luigi-green/90 text-white font-bold"
+				>
+					{isPublishing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+					{id ? "Update Post" : "Publish Post"}
+				</Button>
+			</div>
+		</div>
+	);
 
 	// Fetch data if editing
 	const { data: post, isLoading } = useQuery({
@@ -42,7 +73,6 @@ export const PostWritePage = () => {
 			setSlug(post.slug);
 			setTags(post.tags);
 			setType(post.type);
-			setThumbnail(post.thumbnail || null);
 			setDescription(post.description || "");
 			setPostId(post.postId);
 		} else if (!id) {
@@ -58,7 +88,6 @@ export const PostWritePage = () => {
 		setSlug,
 		setTags,
 		setType,
-		setThumbnail,
 		setDescription,
 		setPostId,
 	]);
@@ -86,27 +115,16 @@ export const PostWritePage = () => {
 
 			<div className="flex flex-col lg:flex-row gap-8 items-start">
 				<div className="flex-1 w-full space-y-4">
-					<IssueEditor />
-
-					<div className="flex flex-col items-end gap-2 px-4 lg:px-8">
-						{imageUploadBlockMessage && (
-							<p className="text-sm text-destructive">{imageUploadBlockMessage}</p>
-						)}
-						<Button
-							variant="default"
-							onClick={publishPost}
-							disabled={isPublishing || !!imageUploadBlockMessage}
-							className="bg-luigi-green hover:bg-luigi-green/90 text-white font-bold"
-						>
-							{isPublishing && (
-								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-							)}
-							{id ? "Update Post" : "Submit New Post"}
-						</Button>
+					<div className="lg:hidden">
+						<PostEditorSidebar actions={primaryActions} />
 					</div>
+
+					<IssueEditor />
 				</div>
 
-				<PostEditorSidebar />
+				<div className="hidden lg:block">
+					<PostEditorSidebar actions={primaryActions} />
+				</div>
 			</div>
 		</div>
 	);

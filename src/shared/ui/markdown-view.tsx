@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createElement, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -13,7 +13,7 @@ import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import typescript from "react-syntax-highlighter/dist/esm/languages/prism/typescript";
 import yaml from "react-syntax-highlighter/dist/esm/languages/prism/yaml";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Copy, Check } from "lucide-react";
+import { Check, Copy, X } from "lucide-react";
 import { useTheme } from "@/shared/providers/theme-provider";
 import { cn } from "@/shared/lib/utils";
 
@@ -32,25 +32,49 @@ SyntaxHighlighter.registerLanguage("ts", typescript);
 SyntaxHighlighter.registerLanguage("yaml", yaml);
 SyntaxHighlighter.registerLanguage("yml", yaml);
 
+type CopyState = "idle" | "success" | "error";
+
 const CodeBlock = ({ language, value }: { language?: string; value: string }) => {
-    const [copied, setCopied] = useState(false);
+    const [copyState, setCopyState] = useState<CopyState>("idle");
     const { resolvedTheme } = useTheme();
+    const languageLabel = language ? language.replace(/-/g, " ") : "Plain text";
 
     const handleCopy = async () => {
-        await navigator.clipboard.writeText(value);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopyState("success");
+        } catch (_error) {
+            setCopyState("error");
+        } finally {
+            window.setTimeout(() => setCopyState("idle"), 2000);
+        }
     };
 
+    const isCopied = copyState === "success";
+    const copyLabel = isCopied ? "Copied" : copyState === "error" ? "Copy failed" : "Copy";
+
     return (
-        <div className="relative group my-4 rounded-lg overflow-hidden border dark:border-white/10">
-            <button
-                onClick={handleCopy}
-                className="absolute right-3 top-3 p-1.5 rounded bg-muted/50 hover:bg-muted transition-colors z-10 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100"
-                title="Copy code"
-            >
-                {copied ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
-            </button>
+        <figure className="group my-5 overflow-hidden rounded-xl border border-border/80 bg-muted/30 shadow-sm dark:border-white/10 dark:bg-white/[0.03]">
+            <figcaption className="flex min-h-10 items-center justify-between gap-3 border-b border-border/70 bg-muted/40 px-3 py-2 dark:border-white/10 dark:bg-white/[0.04]">
+                <span className="rounded-full border border-border/70 bg-background/80 px-2.5 py-1 font-mono text-[11px] font-medium uppercase tracking-wide text-muted-foreground dark:border-white/10 dark:bg-black/20">
+                    {languageLabel}
+                </span>
+                <button
+                    type="button"
+                    onClick={handleCopy}
+                    className={cn(
+                        "inline-flex min-h-8 items-center gap-1.5 rounded-md border border-border/70 bg-background/80 px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-white/10 dark:bg-white/[0.04]",
+                        isCopied && "text-emerald-500 dark:text-emerald-400",
+                        copyState === "error" && "text-destructive",
+                    )}
+                    aria-live="polite"
+                    aria-label={`${copyLabel} code block`}
+                    title={`${copyLabel} code block`}
+                >
+                    {isCopied ? <Check className="h-3.5 w-3.5" /> : copyState === "error" ? <X className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                    <span>{copyLabel}</span>
+                </button>
+            </figcaption>
             <SyntaxHighlighter
                 style={resolvedTheme === "dark" ? oneDark : oneLight}
                 language={language || "text"}
@@ -58,32 +82,64 @@ const CodeBlock = ({ language, value }: { language?: string; value: string }) =>
                 customStyle={{
                     margin: 0,
                     padding: "1.25rem",
-                    background: resolvedTheme === "dark" ? undefined : "#f1f5f9", // slate-100
-                    fontSize: "0.95rem",
+                    background: resolvedTheme === "dark" ? "transparent" : "#f8fafc",
+                    fontSize: "0.92rem",
+                    overflowX: "auto",
+                }}
+                codeTagProps={{
+                    style: {
+                        fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+                    },
                 }}
             >
                 {value}
             </SyntaxHighlighter>
-        </div>
+        </figure>
     );
 };
 
 interface MarkdownViewProps {
     content: string;
     className?: string;
+    headingIds?: string[];
 }
 
-export const MarkdownView = ({ content, className }: MarkdownViewProps) => {
+export const MarkdownView = ({ content, className, headingIds = [] }: MarkdownViewProps) => {
+    let headingIndex = 0;
+    const headingComponents = ([1, 2, 3, 4] as const).reduce(
+        (components, level) => ({
+            ...components,
+            [`h${level}`]: ({ children, ...props }: any) => {
+                const id = headingIds[headingIndex++];
+
+                return createElement(
+                    `h${level}`,
+                    {
+                        ...props,
+                        id,
+                        className: cn(id && "scroll-mt-24"),
+                    },
+                    id ? (
+                        <a href={`#${id}`} className="no-underline hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                            {children}
+                        </a>
+                    ) : children,
+                );
+            },
+        }),
+        {},
+    );
+
     return (
-        <div className={cn("prose max-w-none break-words dark:prose-invert prose-img:max-w-full prose-img:rounded-md prose-pre:bg-transparent prose-pre:p-0", className)}>
+        <div className={cn("prose max-w-none break-words dark:prose-invert prose-img:max-w-full prose-img:rounded-md prose-pre:bg-transparent prose-pre:p-0 prose-figure:my-0", className)}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                    code({ node, inline, className, children, ...props }: any) {
-                        const match = /language-(\w+)/.exec(className || "");
+                    ...headingComponents,
+                    code({ inline, className, children, ...props }: any) {
+                        const match = /language-([\w-]+)/.exec(className || "");
                         const value = String(children).replace(/\n$/, "");
 
-                        // If it's a block (not inline) or has a language match
                         if (!inline && (match || String(children).includes("\n") || className)) {
                             return <CodeBlock language={match ? match[1] : undefined} value={value} />;
                         }
