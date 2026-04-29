@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDeletePost } from "@/entities/post/model/post.mutations";
@@ -11,6 +12,8 @@ import { CommentList } from "./comment-list";
 import { IssueHeader } from "./issue-header";
 import { PostDetailSidebar } from "./post-detail-sidebar";
 import { PostDetailSkeleton } from "./post-detail-skeleton";
+import { ReadingHud, ReadingProgress } from "./reading-hud";
+import { extractMarkdownHeadings } from "../model/reading-navigation";
 
 export const PostDetailPage = () => {
 	const { username, slug } = useParams<{ username: string; slug: string }>();
@@ -28,6 +31,10 @@ export const PostDetailPage = () => {
 		...postQueries.detailBySlug(username ?? "", slug ?? ""),
 		enabled: !!username && !!slug,
 	});
+
+	const content = post?.body ?? "";
+	const headings = useMemo(() => extractMarkdownHeadings(content), [content]);
+	const headingIds = useMemo(() => headings.map((heading) => heading.id), [headings]);
 
 	const handleDelete = async () => {
 		if (!post) return;
@@ -54,11 +61,10 @@ export const PostDetailPage = () => {
 			</div>
 		);
 
-	// Moved to top
-	// const isOwner = useIsOwner();
-
 	return (
-		<article className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
+		<>
+			<ReadingProgress />
+			<article className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
 			<IssueHeader
 				title={post.title}
 				postId={post.postId}
@@ -90,7 +96,8 @@ export const PostDetailPage = () => {
 							avatarUrl: post.author?.profileImageUrl,
 						}}
 						date={post.createdAt}
-						content={post.body ?? ""}
+						content={content}
+						headingIds={headingIds}
 						type="ISSUE"
 					/>
 
@@ -115,15 +122,19 @@ export const PostDetailPage = () => {
 					</div>
 				</div>
 
-				<PostDetailSidebar
-					author={{
-						nickname: post.author?.nickname || "Anonymous",
-						profileImageUrl: post.author?.profileImageUrl,
-					}}
-					tags={post.tags}
-					type={post.type}
-				/>
+				<aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+					<ReadingHud headings={headings} />
+					<PostDetailSidebar
+						author={{
+							nickname: post.author?.nickname || "Anonymous",
+							profileImageUrl: post.author?.profileImageUrl,
+						}}
+						tags={post.tags}
+						type={post.type}
+					/>
+				</aside>
 			</div>
-		</article>
+			</article>
+		</>
 	);
 };

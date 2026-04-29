@@ -11,9 +11,10 @@ interface CommentBoxProps extends ComponentProps<"div"> {
     content: string;
     type?: "ISSUE" | "COMMENT";
     actions?: React.ReactNode;
+    headingIds?: string[];
 }
 
-export const CommentBox = ({ author, date, content, type = "ISSUE", actions, className, ...props }: CommentBoxProps) => {
+export const CommentBox = ({ author, date, content, type = "ISSUE", actions, headingIds, className, ...props }: CommentBoxProps) => {
     return (
         <div className={cn("flex gap-0 md:gap-4", className)} {...props}>
             <div className="hidden md:block flex-none">
@@ -50,7 +51,7 @@ export const CommentBox = ({ author, date, content, type = "ISSUE", actions, cla
 
                     {/* Body */}
                     <div className="min-h-[200px] bg-background p-3 sm:p-4 md:p-8">
-                        <MarkdownView content={content} />
+                        <MarkdownView content={content} headingIds={headingIds} />
                     </div>
                 </div>
             </div>

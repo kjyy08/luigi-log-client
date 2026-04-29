@@ -16,7 +16,6 @@ export const EditPostPage = () => {
 		setSlug,
 		setTags,
 		setType,
-		setThumbnail,
 		setDescription,
 		setPostId,
 	} = useEditorStore();
@@ -28,7 +27,6 @@ export const EditPostPage = () => {
 			setSlug(post.slug);
 			setTags(post.tags);
 			setType(post.type);
-			setThumbnail(post.thumbnail || null);
 			setDescription(post.description || "");
 			setPostId(post.postId);
 		}
@@ -39,7 +37,6 @@ export const EditPostPage = () => {
 		setPostId,
 		setSlug,
 		setTags,
-		setThumbnail,
 		setTitle,
 		setType,
 	]); // Run when post data loads
