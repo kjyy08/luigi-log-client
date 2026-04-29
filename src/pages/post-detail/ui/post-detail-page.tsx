@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDeletePost } from "@/entities/post/model/post.mutations";
 import { postQueries } from "@/entities/post/model/post.queries";
+import { PostAdjacentNavigation } from "@/entities/post/ui/post-adjacent-navigation";
 import { useIsOwner } from "@/shared/hooks/use-is-owner";
 import { useToast } from "@/shared/hooks/use-toast";
 import { Button } from "@/shared/ui/button";
@@ -13,6 +14,7 @@ import { IssueHeader } from "./issue-header";
 import { PostDetailSidebar } from "./post-detail-sidebar";
 import { PostDetailSkeleton } from "./post-detail-skeleton";
 import { ReadingHud, ReadingProgress } from "./reading-hud";
+import { getPostAdjacentNavigationProps } from "../model/post-adjacent-navigation-props";
 import { extractMarkdownHeadings } from "../model/reading-navigation";
 
 export const PostDetailPage = () => {
@@ -35,6 +37,9 @@ export const PostDetailPage = () => {
 	const content = post?.body ?? "";
 	const headings = useMemo(() => extractMarkdownHeadings(content), [content]);
 	const headingIds = useMemo(() => headings.map((heading) => heading.id), [headings]);
+	const adjacentNavigationProps = post
+		? getPostAdjacentNavigationProps(post, username)
+		: null;
 
 	const handleDelete = async () => {
 		if (!post) return;
@@ -101,6 +106,14 @@ export const PostDetailPage = () => {
 						headings={headings}
 						type="ISSUE"
 					/>
+
+					{adjacentNavigationProps && (
+						<PostAdjacentNavigation
+							previousPost={adjacentNavigationProps.previousPost}
+							nextPost={adjacentNavigationProps.nextPost}
+							currentUsername={adjacentNavigationProps.currentUsername}
+						/>
+					)}
 
 					<div className="relative py-8">
 						<div className="absolute inset-0 flex items-center">
