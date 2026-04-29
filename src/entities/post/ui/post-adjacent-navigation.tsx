@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/shared/lib/utils";
 import type { AdjacentPost } from "../model/post.dto";
-import { buildAdjacentPostPath, hasAdjacentPosts } from "../model/adjacent-post-navigation";
+import { buildAdjacentPostPath, getAdjacentPostSlotClassName, hasAdjacentPosts } from "../model/adjacent-post-navigation";
 
 interface PostAdjacentNavigationProps {
 	previousPost?: AdjacentPost | null;
@@ -22,7 +22,7 @@ const AdjacentPostCard = ({
 	currentUsername,
 }: AdjacentPostCardProps) => {
 	const isPrevious = direction === "previous";
-	const label = isPrevious ? "← Previous post" : "Next post →";
+	const label = isPrevious ? "Previous post" : "Next post";
 	const ariaLabel = isPrevious
 		? `Go to previous post: ${post.title}`
 		: `Go to next post: ${post.title}`;
@@ -32,14 +32,22 @@ const AdjacentPostCard = ({
 			to={buildAdjacentPostPath(post, currentUsername)}
 			aria-label={ariaLabel}
 			className={cn(
-				"group flex min-h-32 flex-col justify-between rounded-xl border border-white/10 bg-white/[0.02] p-4 transition-colors hover:border-luigi-green/40 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-luigi-green focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-5",
-				!isPrevious && "sm:text-right",
+				"group flex min-h-24 flex-col justify-between rounded-md border border-white/10 bg-white/[0.015] px-4 py-3 transition-colors hover:border-white/20 hover:bg-white/[0.035] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-luigi-green/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+				getAdjacentPostSlotClassName(direction),
+				!isPrevious && "text-right",
 			)}
 		>
-			<span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground transition-colors group-hover:text-luigi-green">
-				{label}
+			<span
+				className={cn(
+					"flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground transition-colors group-hover:text-foreground",
+					!isPrevious && "justify-end",
+				)}
+			>
+				{isPrevious && <span aria-hidden="true">←</span>}
+				<span>{label}</span>
+				{!isPrevious && <span aria-hidden="true">→</span>}
 			</span>
-			<span className="mt-4 line-clamp-2 text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-luigi-green sm:text-lg">
+			<span className="mt-3 line-clamp-2 text-sm font-medium leading-snug text-foreground transition-colors group-hover:text-luigi-green">
 				{post.title}
 			</span>
 		</Link>
