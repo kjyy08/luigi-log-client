@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { BaseLayout } from "@/app/layouts/base-layout";
+import { PostDetailScrollRestoration } from "@/app/routers/scroll-restoration";
 import { Toaster } from "@/shared/ui/toaster";
 
 const HomePage = lazy(() => import("@/pages/home").then((module) => ({ default: module.HomePage })));
@@ -15,6 +16,7 @@ const GuestbookPage = lazy(() => import("@/pages/guestbook").then((module) => ({
 export const AppRouter = () => {
     return (
         <BrowserRouter>
+            <PostDetailScrollRestoration />
             <Suspense fallback={null}>
                 <Routes>
                     <Route element={<BaseLayout />}>
