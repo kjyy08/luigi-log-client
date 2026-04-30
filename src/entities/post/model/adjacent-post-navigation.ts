@@ -19,16 +19,22 @@ export const buildAdjacentPostAriaLabel = (
 		? `Go to previous post: ${post.title}`
 		: `Go to next post: ${post.title}`;
 
+export const getAdjacentPostInnerColumnClassName = () =>
+	"md:ml-14 md:w-[calc(100%-3.5rem)]";
+
+export const getAdjacentPostGridClassName = () =>
+	"grid w-full min-w-0 max-w-full grid-cols-1 gap-3 xl:grid-cols-2";
+
 export const getAdjacentPostPlacementClassName = (
 	direction: AdjacentPostDirection,
 	hasPreviousPost: boolean,
 	hasNextPost: boolean,
 ) => {
-	if (direction === "previous") return "sm:justify-self-start";
+	if (direction === "previous") return "xl:justify-self-start";
 
 	return hasPreviousPost && hasNextPost
-		? "sm:justify-self-end sm:text-right"
-		: "sm:col-start-2 sm:justify-self-end sm:text-right";
+		? "xl:justify-self-end xl:text-right"
+		: "xl:col-start-2 xl:justify-self-end xl:text-right";
 };
 
 export const shouldScrollRouteToTop = (

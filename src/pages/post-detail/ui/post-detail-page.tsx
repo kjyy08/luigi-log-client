@@ -3,8 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDeletePost } from "@/entities/post/model/post.mutations";
 import { postQueries } from "@/entities/post/model/post.queries";
+import { getAdjacentPostInnerColumnClassName } from "@/entities/post/model/adjacent-post-navigation";
 import { PostAdjacentNavigation } from "@/entities/post/ui/post-adjacent-navigation";
 import { useIsOwner } from "@/shared/hooks/use-is-owner";
+import { cn } from "@/shared/lib/utils";
 import { useToast } from "@/shared/hooks/use-toast";
 import { Button } from "@/shared/ui/button";
 import { CommentBox } from "./comment-box";
@@ -40,6 +42,7 @@ export const PostDetailPage = () => {
 	const adjacentNavigationProps = post
 		? getPostAdjacentNavigationProps(post, username)
 		: null;
+	const adjacentInnerColumnClassName = getAdjacentPostInnerColumnClassName();
 
 	const handleDelete = async () => {
 		if (!post) return;
@@ -109,13 +112,14 @@ export const PostDetailPage = () => {
 
 					{adjacentNavigationProps && (
 						<PostAdjacentNavigation
+							className={adjacentInnerColumnClassName}
 							previousPost={adjacentNavigationProps.previousPost}
 							nextPost={adjacentNavigationProps.nextPost}
 							currentUsername={adjacentNavigationProps.currentUsername}
 						/>
 					)}
 
-					<div className="relative py-8">
+					<div className={cn("relative py-8", adjacentInnerColumnClassName)}>
 						<div className="absolute inset-0 flex items-center">
 							<span className="w-full border-t-2 border-dashed border-gray-200 dark:border-gray-800" />
 						</div>
