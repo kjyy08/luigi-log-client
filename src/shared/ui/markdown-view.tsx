@@ -15,6 +15,7 @@ import yaml from "react-syntax-highlighter/dist/esm/languages/prism/yaml";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Check, Copy, X } from "lucide-react";
 import { createMarkdownHeadingIdResolver, type MarkdownHeading } from "@/pages/post-detail/model/reading-navigation";
+import { getCodeBlockSyntaxStyles } from "@/shared/lib/code-block-theme";
 import { useTheme } from "@/shared/providers/theme-provider";
 import { cn } from "@/shared/lib/utils";
 
@@ -39,6 +40,7 @@ const CodeBlock = ({ language, value }: { language?: string; value: string }) =>
     const [copyState, setCopyState] = useState<CopyState>("idle");
     const { resolvedTheme } = useTheme();
     const languageLabel = language ? language.replace(/-/g, " ") : "Plain text";
+    const syntaxStyles = getCodeBlockSyntaxStyles(resolvedTheme);
 
     const handleCopy = async () => {
         try {
@@ -55,7 +57,7 @@ const CodeBlock = ({ language, value }: { language?: string; value: string }) =>
     const copyLabel = isCopied ? "Copied" : copyState === "error" ? "Copy failed" : "Copy";
 
     return (
-        <figure className="group my-5 overflow-hidden rounded-xl border border-border/80 bg-muted/30 shadow-sm dark:border-white/10 dark:bg-white/[0.03]">
+        <figure className="markdown-code-block group my-5 overflow-hidden rounded-xl border border-border/80 bg-white/[0.04] shadow-sm dark:border-white/10 dark:bg-white/[0.03]">
             <figcaption className="flex min-h-10 items-center justify-between gap-3 border-b border-border/70 bg-muted/40 px-3 py-2 dark:border-white/10 dark:bg-white/[0.04]">
                 <span className="rounded-full border border-border/70 bg-background/80 px-2.5 py-1 font-mono text-[11px] font-medium uppercase tracking-wide text-muted-foreground dark:border-white/10 dark:bg-black/20">
                     {languageLabel}
@@ -80,18 +82,10 @@ const CodeBlock = ({ language, value }: { language?: string; value: string }) =>
                 style={resolvedTheme === "dark" ? oneDark : oneLight}
                 language={language || "text"}
                 PreTag="div"
-                customStyle={{
-                    margin: 0,
-                    padding: "1.25rem",
-                    background: resolvedTheme === "dark" ? "transparent" : "#f8fafc",
-                    fontSize: "0.92rem",
-                    overflowX: "auto",
-                }}
-                codeTagProps={{
-                    style: {
-                        fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-                    },
-                }}
+                customStyle={syntaxStyles.customStyle}
+                codeTagProps={syntaxStyles.codeTagProps}
+                wrapLines
+                lineProps={syntaxStyles.lineProps}
             >
                 {value}
             </SyntaxHighlighter>

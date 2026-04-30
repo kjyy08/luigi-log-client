@@ -85,4 +85,11 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-luigi-green;
   }
+
+  .markdown-code-block pre,
+  .markdown-code-block code,
+  .markdown-code-block span:not([class*="text-"]) {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
 }
