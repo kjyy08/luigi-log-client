@@ -4,6 +4,8 @@ import assert from "node:assert/strict";
 import {
     buildAdjacentPostAriaLabel,
     buildAdjacentPostPath,
+    getAdjacentPostInnerColumnClassName,
+    getAdjacentPostGridClassName,
     getAdjacentPostPlacementClassName,
     hasAdjacentPosts,
     shouldScrollRouteToTop,
@@ -31,11 +33,26 @@ test("builds direction-specific aria labels for full-card adjacent links", () =>
     assert.equal(buildAdjacentPostAriaLabel(post, "next"), "Go to next post: A very long adjacent post title");
 });
 
-test("places a single next post at the desktop end without rendering a placeholder", () => {
-    assert.equal(getAdjacentPostPlacementClassName("previous", true, true), "sm:justify-self-start");
-    assert.equal(getAdjacentPostPlacementClassName("next", true, true), "sm:justify-self-end sm:text-right");
-    assert.equal(getAdjacentPostPlacementClassName("previous", true, false), "sm:justify-self-start");
-    assert.equal(getAdjacentPostPlacementClassName("next", false, true), "sm:col-start-2 sm:justify-self-end sm:text-right");
+test("places adjacent cards only at wide desktop breakpoints without rendering a placeholder", () => {
+    assert.equal(getAdjacentPostPlacementClassName("previous", true, true), "xl:justify-self-start");
+    assert.equal(getAdjacentPostPlacementClassName("next", true, true), "xl:justify-self-end xl:text-right");
+    assert.equal(getAdjacentPostPlacementClassName("previous", true, false), "xl:justify-self-start");
+    assert.equal(getAdjacentPostPlacementClassName("next", false, true), "xl:col-start-2 xl:justify-self-end xl:text-right");
+});
+
+test("aligns adjacent navigation to the post/comment inner column on desktop", () => {
+    const className = getAdjacentPostInnerColumnClassName();
+
+    assert.match(className, /md:ml-14/);
+    assert.match(className, /md:w-\[calc\(100%-3\.5rem\)\]/);
+});
+
+test("keeps adjacent cards stacked until wide desktop to avoid narrow two-column cropping", () => {
+    const className = getAdjacentPostGridClassName();
+
+    assert.match(className, /grid-cols-1/);
+    assert.doesNotMatch(className, /sm:grid-cols-2/);
+    assert.match(className, /xl:grid-cols-2/);
 });
 
 test("scrolls pathname route changes to top only when the target has no hash", () => {

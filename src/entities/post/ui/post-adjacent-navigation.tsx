@@ -4,6 +4,7 @@ import type { AdjacentPost } from "../model/post.dto";
 import {
 	buildAdjacentPostAriaLabel,
 	buildAdjacentPostPath,
+	getAdjacentPostGridClassName,
 	getAdjacentPostPlacementClassName,
 	hasAdjacentPosts,
 	type AdjacentPostDirection,
@@ -75,7 +76,7 @@ export const PostAdjacentNavigation = ({
 			>
 				Continue reading
 			</h2>
-			<div className="grid w-full min-w-0 max-w-full gap-3 sm:grid-cols-2">
+			<div className={getAdjacentPostGridClassName()}>
 				{previousPost && (
 					<AdjacentPostCard
 						post={previousPost}
