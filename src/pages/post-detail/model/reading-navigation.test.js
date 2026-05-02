@@ -1,7 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { buildHeadingId, createMarkdownHeadingIdResolver, extractMarkdownHeadings, getActiveHeadingId } from "./reading-navigation.ts";
+import {
+    buildHeadingId,
+    createMarkdownHeadingIdResolver,
+    extractMarkdownHeadings,
+    getActiveHeadingId,
+    getVisibleTocHeadingIds,
+} from "./reading-navigation.ts";
 
 test("builds stable heading ids and resolves collisions", () => {
     const usedIds = new Map();
@@ -88,4 +94,38 @@ test("resolves rendered heading ids by source line without consuming ids during 
     assert.equal(resolveHeadingId(2, "Setup", 1), "setup");
     assert.equal(resolveHeadingId(2, "Setup", 1), "setup");
     assert.equal(resolveHeadingId(2, "Setup", 3), "setup-2");
+});
+
+test("keeps h2 headings visible while collapsing nested headings outside the active h2 section", () => {
+    const headings = [
+        { id: "overview", level: 2, text: "Overview" },
+        { id: "context", level: 3, text: "Context" },
+        { id: "details", level: 4, text: "Details" },
+        { id: "api", level: 2, text: "API" },
+        { id: "request", level: 3, text: "Request" },
+        { id: "response", level: 4, text: "Response" },
+    ];
+
+    assert.deepEqual(getVisibleTocHeadingIds(headings, "context"), [
+        "overview",
+        "context",
+        "details",
+        "api",
+    ]);
+    assert.deepEqual(getVisibleTocHeadingIds(headings, "response"), [
+        "overview",
+        "api",
+        "request",
+        "response",
+    ]);
+});
+
+test("shows active nested headings when a document starts without h2 headings", () => {
+    const headings = [
+        { id: "title", level: 1, text: "Title" },
+        { id: "intro", level: 3, text: "Intro" },
+        { id: "deep", level: 4, text: "Deep" },
+    ];
+
+    assert.deepEqual(getVisibleTocHeadingIds(headings, "deep"), ["title", "intro", "deep"]);
 });

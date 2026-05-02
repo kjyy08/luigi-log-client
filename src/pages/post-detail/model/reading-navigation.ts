@@ -118,3 +118,33 @@ export const getActiveHeadingId = (
 
     return activeHeading?.id ?? measuredHeadings[0].id;
 };
+
+const getNearestParentH2Index = (headings: MarkdownHeading[], index: number) => {
+    for (let cursor = index; cursor >= 0; cursor -= 1) {
+        if (headings[cursor]?.level === 2) return cursor;
+    }
+
+    return -1;
+};
+
+export const getVisibleTocHeadingIds = (headings: MarkdownHeading[], activeId: string) => {
+    if (headings.length === 0) return [];
+
+    const activeIndex = Math.max(
+        0,
+        headings.findIndex((heading) => heading.id === activeId),
+    );
+    const activeParentH2Index = getNearestParentH2Index(headings, activeIndex);
+
+    return headings
+        .filter((heading, index) => {
+            if (heading.level <= 2) return true;
+
+            if (activeParentH2Index >= 0) {
+                return getNearestParentH2Index(headings, index) === activeParentH2Index;
+            }
+
+            return index <= activeIndex;
+        })
+        .map((heading) => heading.id);
+};
