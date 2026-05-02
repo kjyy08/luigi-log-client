@@ -140,7 +140,7 @@ export const PostDetailPage = () => {
 					</div>
 				</div>
 
-				<aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+				<aside className="space-y-6 lg:sticky lg:top-24 lg:flex lg:max-h-[calc(100vh-6rem)] lg:flex-col lg:self-start lg:overflow-hidden lg:space-y-0 lg:gap-6">
 					<PostDetailSidebar
 						author={{
 							nickname: post.author?.nickname || "Anonymous",
