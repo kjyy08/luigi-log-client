@@ -16,6 +16,7 @@ import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/pris
 import { Check, Copy, X } from "lucide-react";
 import { createMarkdownHeadingIdResolver, type MarkdownHeading } from "@/pages/post-detail/model/reading-navigation";
 import { getCodeBlockSyntaxStyles } from "@/shared/lib/code-block-theme";
+import { MermaidDiagram } from "@/shared/ui/mermaid-diagram";
 import { useTheme } from "@/shared/providers/theme-provider";
 import { cn } from "@/shared/lib/utils";
 
@@ -152,6 +153,10 @@ export const MarkdownView = ({ content, className, headingIds = [], headings = [
                     code({ inline, className, children, ...props }: any) {
                         const match = /language-([\w-]+)/.exec(className || "");
                         const value = String(children).replace(/\n$/, "");
+
+                        if (!inline && match?.[1] === "mermaid") {
+                            return <MermaidDiagram source={value} />;
+                        }
 
                         if (!inline && (match || String(children).includes("\n") || className)) {
                             return <CodeBlock language={match ? match[1] : undefined} value={value} />;
