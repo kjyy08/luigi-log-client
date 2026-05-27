@@ -8,6 +8,7 @@ import { PostAdjacentNavigation } from "@/entities/post/ui/post-adjacent-navigat
 import { useIsOwner } from "@/shared/hooks/use-is-owner";
 import { cn } from "@/shared/lib/utils";
 import { useToast } from "@/shared/hooks/use-toast";
+import { buildPostMetadata, SeoMetadataTags } from "@/shared/seo";
 import { Button } from "@/shared/ui/button";
 import { CommentBox } from "./comment-box";
 import { CommentForm } from "./comment-form";
@@ -42,6 +43,9 @@ export const PostDetailPage = () => {
 	const adjacentNavigationProps = post
 		? getPostAdjacentNavigationProps(post, username)
 		: null;
+	const seoMetadata = post && username && slug
+		? buildPostMetadata({ username, slug, post })
+		: null;
 	const adjacentInnerColumnClassName = getAdjacentPostInnerColumnClassName();
 
 	const handleDelete = async () => {
@@ -71,6 +75,7 @@ export const PostDetailPage = () => {
 
 	return (
 		<>
+			{seoMetadata && <SeoMetadataTags metadata={seoMetadata} />}
 			<ReadingProgress />
 			<article className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
 			<IssueHeader
