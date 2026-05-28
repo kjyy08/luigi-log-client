@@ -3,7 +3,7 @@ const runtimeEnv = globalThis.process?.env ?? {};
 export const SITE_ORIGIN = runtimeEnv.SITE_ORIGIN || "https://blog.luigi99.cloud";
 export const API_BASE_URL = runtimeEnv.BLOG_API_BASE_URL || runtimeEnv.VITE_API_BASE_URL || "https://blog-server.luigi99.cloud";
 export const SITE_NAME = "Luigi Log";
-export const DEFAULT_DESCRIPTION = "Luigi Log — development notes, blog posts, and portfolio work by Luigi.";
+export const DEFAULT_DESCRIPTION = "It's Me! Luigi";
 export const DEFAULT_OG_IMAGE_PATH = "/web-app-manifest-512x512.png";
 
 const CRAWLER_USER_AGENT_PATTERN = /Discordbot|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|KakaoTalk|Googlebot|bingbot|DuckDuckBot/i;

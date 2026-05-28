@@ -1,6 +1,6 @@
 export const SITE_ORIGIN = "https://blog.luigi99.cloud";
 export const SITE_NAME = "Luigi Log";
-export const DEFAULT_DESCRIPTION = "Luigi Log — development notes, blog posts, and portfolio work by Luigi.";
+export const DEFAULT_DESCRIPTION = "It's Me! Luigi";
 export const DEFAULT_OG_IMAGE_PATH = "/web-app-manifest-512x512.png";
 
 export interface SeoMetadata {
@@ -20,19 +20,6 @@ interface DefaultMetadataInput {
     path?: string;
     title?: string;
     description?: string;
-}
-
-interface PostMetadataInput {
-    username: string;
-    slug: string;
-    post: {
-        title: string;
-        description?: string;
-        body?: string;
-        tags?: string[];
-        createdAt?: string;
-        updatedAt?: string;
-    };
 }
 
 export const buildCanonicalUrl = (path = "/") => {
@@ -73,16 +60,4 @@ export const buildDefaultMetadata = ({
     siteName: SITE_NAME,
     type: "website",
     twitterCard: "summary_large_image",
-});
-
-export const buildPostMetadata = ({ username, slug, post }: PostMetadataInput): SeoMetadata => ({
-    ...buildDefaultMetadata({
-        path: `/posts/${username}/${slug}`,
-        title: `${post.title} | ${SITE_NAME}`,
-        description: post.description || extractPlainTextDescription(post.body),
-    }),
-    type: "article",
-    tags: post.tags ?? [],
-    publishedTime: post.createdAt,
-    modifiedTime: post.updatedAt,
 });

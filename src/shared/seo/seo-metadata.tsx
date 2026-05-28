@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { buildDefaultMetadata, type SeoMetadata as SeoMetadataModel } from "./metadata";
+import { type SeoMetadata as SeoMetadataModel } from "./metadata";
 
 const upsertMeta = (selector: string, attributes: Record<string, string>) => {
     let element = document.head.querySelector<HTMLMetaElement>(selector);
@@ -67,21 +67,12 @@ export const applySeoMetadata = (metadata: SeoMetadataModel) => {
     }
 };
 
-const getRouteMetadata = (pathname: string) => {
-    if (pathname === "/blog") return buildDefaultMetadata({ path: pathname, title: "Blog | Luigi Log" });
-    if (pathname === "/portfolio") return buildDefaultMetadata({ path: pathname, title: "Portfolio | Luigi Log" });
-    if (pathname === "/guestbook") return buildDefaultMetadata({ path: pathname, title: "Guestbook | Luigi Log" });
-    if (pathname.startsWith("/settings")) return buildDefaultMetadata({ path: pathname, title: "Settings | Luigi Log" });
-    if (pathname.startsWith("/write") || pathname.startsWith("/new")) return buildDefaultMetadata({ path: pathname, title: "Write | Luigi Log" });
-    return buildDefaultMetadata({ path: pathname });
-};
-
-export const RouteSeoMetadata = () => {
+export const RouteSeoMetadata = ({ getMetadata }: { getMetadata: (pathname: string) => SeoMetadataModel }) => {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        applySeoMetadata(getRouteMetadata(pathname));
-    }, [pathname]);
+        applySeoMetadata(getMetadata(pathname));
+    }, [getMetadata, pathname]);
 
     return null;
 };
