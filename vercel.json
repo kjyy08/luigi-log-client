@@ -1,6 +1,25 @@
 {
     "rewrites": [
         {
+            "source": "/robots.txt",
+            "destination": "/api/robots"
+        },
+        {
+            "source": "/sitemap.xml",
+            "destination": "/api/sitemap"
+        },
+        {
+            "source": "/posts/:username/:slug",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "user-agent",
+                    "value": ".*(Discordbot|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|KakaoTalk|Googlebot|bingbot|DuckDuckBot).*"
+                }
+            ],
+            "destination": "/api/og?username=:username&slug=:slug"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }

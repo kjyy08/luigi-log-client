@@ -8,6 +8,7 @@ import { PostAdjacentNavigation } from "@/entities/post/ui/post-adjacent-navigat
 import { useIsOwner } from "@/shared/hooks/use-is-owner";
 import { cn } from "@/shared/lib/utils";
 import { useToast } from "@/shared/hooks/use-toast";
+import { SeoMetadataTags } from "@/shared/seo";
 import { Button } from "@/shared/ui/button";
 import { CommentBox } from "./comment-box";
 import { CommentForm } from "./comment-form";
@@ -17,6 +18,7 @@ import { PostDetailSidebar } from "./post-detail-sidebar";
 import { PostDetailSkeleton } from "./post-detail-skeleton";
 import { ReadingHud, ReadingProgress } from "./reading-hud";
 import { getPostAdjacentNavigationProps } from "../model/post-adjacent-navigation-props";
+import { buildPostDetailMetadata } from "../model/post-detail-seo-metadata";
 import { extractMarkdownHeadings } from "../model/reading-navigation";
 
 export const PostDetailPage = () => {
@@ -41,6 +43,9 @@ export const PostDetailPage = () => {
 	const headingIds = useMemo(() => headings.map((heading) => heading.id), [headings]);
 	const adjacentNavigationProps = post
 		? getPostAdjacentNavigationProps(post, username)
+		: null;
+	const seoMetadata = post && username && slug
+		? buildPostDetailMetadata({ username, slug, post })
 		: null;
 	const adjacentInnerColumnClassName = getAdjacentPostInnerColumnClassName();
 
@@ -71,6 +76,7 @@ export const PostDetailPage = () => {
 
 	return (
 		<>
+			{seoMetadata && <SeoMetadataTags metadata={seoMetadata} />}
 			<ReadingProgress />
 			<article className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
 			<IssueHeader
